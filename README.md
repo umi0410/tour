@@ -1,3 +1,28 @@
+# Go Tour(Go를 향한 여행)
+
+이 repository는 https://tour.golang.org 의 한국어 번역을 위한 repository 입니다.
+
+
+
+## 배포하는 방법
+
+Update `service` in app.yaml
+
+```bash
+$ GO111MODULE=on gcloud --project=$YOUR_GCP_PROJECT app deploy app.yaml
+$ gcloud app browse
+```
+
+
+
+## Contribute하기
+
+
+
+---
+
+_ORIGINAL(English) README.md_
+
 # Go Tour
 
 A Tour of Go is an introduction to the Go programming language. Visit
