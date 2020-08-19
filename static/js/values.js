@@ -9,18 +9,18 @@ angular.module('tour.values', []).
 // List of modules with description and lessons in it.
 value('tableOfContents', [{
     'id': 'mechanics',
-    'title': 'Using the tour',
+    'title': '이 여행 이용하기',
     'description': '<p><a href="https://golang.org">Go 프로그래밍 언어</a>로의 여행에 오신 것을 환영합니다. 이 여행은 Go 언어의 가장 중요한 특징들을 주로 다룹니다.</p>',
     'lessons': ['welcome']
 }, {
     'id': 'basics',
-    'title': 'Basics',
-    'description': '<p>The starting point, learn all the basics of the language.</p><p>Declaring variables, calling functions, and all the things you need to know before moving to the next lessons.</p>',
+    'title': '기초',
+    'description': '<p>시작 지점 - Go 언어의 모든 기초(변수 선언, 함수 호출 그리고 다음 강의로 이동하기 전에 당신이 알아야하는 모든 것들)를 배우십시오.</p>',
     'lessons': ['basics', 'flowcontrol', 'moretypes']
 }, {
     'id': 'methods',
-    'title': 'Methods and interfaces',
-    'description': '<p>Learn how to define methods on types, how to declare interfaces, and how to put everything together.</p>',
+    'title': '메소드와 인터페이스',
+    'description': '<p>타입에 메소드를 정의하는 방법과 인터페이스를 선언하는 방법 그리고 모든 것을 조합하는 방법을 배우십시오</p>',
     'lessons': ['methods']
 }, {
     'id': 'concurrency',
@@ -31,27 +31,27 @@ value('tableOfContents', [{
 
 // translation
 value('translation', {
-    'off': 'off',
-    'on': 'on',
+    'off': '끄기',
+    'on': '켜기',
     'syntax': 'Syntax-Highlighting',
     'lineno': 'Line-Numbers',
-    'reset': 'Reset Slide',
-    'format': 'Format Source Code',
-    'kill': 'Kill Program',
-    'run': 'Run',
-    'compile': 'Compile and Run',
-    'more': 'Options',
+    'reset': '초기화',
+    'format': '형식 맞추기',
+    'kill': '종료',
+    'run': '실행',
+    'compile': '컴파일 후 실행',
+    'more': '옵션',
     'toc': 'Table of Contents',
-    'prev': 'Previous',
-    'next': 'Next',
-    'waiting': 'Waiting for remote server...',
-    'errcomm': 'Error communicating with remote server.',
-    'submit-feedback': 'Send feedback about this page',
+    'prev': '이전',
+    'next': '다음',
+    'waiting': '원격 서버를 기다리는 중',
+    'errcomm': '원격 서버와의 연결 오류.',
+    'submit-feedback': '이 페이지에 대한 피드백을 보내주십시오',
 
     // GitHub issue template: update repo and messaging when translating.
-    'github-repo': 'github.com/golang/tour',
+    'github-repo': 'github.com/golang-ko/tour',
     'issue-title': 'tour: [REPLACE WITH SHORT DESCRIPTION]',
-    'issue-message': 'Change the title above to describe your issue and add your feedback here, including code if necessary',
+    'issue-message': '당신의 Issue를 묘사하도록 위의 제목을 변경한 후 필요하다면 코드도 포함하여 여기에 피드백을 추가해주세요.',
     'context': 'Context',
 }).
 

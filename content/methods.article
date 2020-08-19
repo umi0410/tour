@@ -1,5 +1,5 @@
-Methods and interfaces
-This lesson covers methods and interfaces, the constructs that define objects and their behavior.
+Method와 interface
+이 강의는 object와 그것들의 행동을 정의하는 구조인 method와 interface를 다룹니다.
 
 The Go Authors
 https://golang.org

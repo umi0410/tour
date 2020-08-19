@@ -1,12 +1,12 @@
-Packages, variables, and functions.
-Learn the basic components of any Go program.
+패키지와 변수, 함수
+모든 Go 프로그램의 기본 구성요소들에 대해 배워보십시오.
 
 The Go Authors
 https://golang.org
 
-* Packages
+* 패키지
 
-Every Go program is made up of packages.
+모든 Go 프로그램은 패키지로 구성되어있습니다.
 
 Programs start running in package `main`.
 

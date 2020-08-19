@@ -1,5 +1,5 @@
-More types: structs, slices, and maps.
-Learn how to define types based on existing ones: this lesson covers structs, arrays, slices, and maps.
+더 많은 타입들: struct와 slice, map
+존재하는 타입을 기반으로 타입들을 정의하는 방법을 배워보십시오: 이번 강의는 struct와 array, slice, map을 다룹니다.
 
 The Go Authors
 https://golang.org
@@ -322,7 +322,7 @@ If `key` is not in the map, then `elem` is the zero value for the map's element 
 
 * Exercise: Maps
 
-Implement `WordCount`.  It should return a map of the counts of each “word” in the string `s`. The `wc.Test` function runs a test suite against the provided function and prints success or failure.
+Implement `WordCount`.  It should return a map of the counts of each âwordâ in the string `s`. The `wc.Test` function runs a test suite against the provided function and prints success or failure.
 
 You might find [[https://golang.org/pkg/strings/#Fields][strings.Fields]] helpful.
 
