@@ -1,97 +1,89 @@
-Flow control statements: for, if, else, switch and defer
-Learn how to control the flow of your code with conditionals, loops, switches and defers.
+흐름 제어 구문: for, if, else, switch 그리고 defer
+당신의 흐름을 조건문과 반복문, switch, defer로 제어하는 방법을 배우십시오.
 
 The Go Authors
 https://golang.org
 
 * For
 
-Go has only one looping construct, the `for` loop.
+Go는 for 반복문이라는 단 하나의 반복 구조를 가집니다.
 
-The basic `for` loop has three components separated by semicolons:
+기본적인 for 반복문의 `;` 으로 구별되는 세 가지 구성 요소를 갖습니다.
 
-- the init statement: executed before the first iteration
-- the condition expression: evaluated before every iteration
-- the post statement: executed at the end of every iteration
+- 초기화 구문: 첫 번째 iteration 전에 수행됩니다.
 
-The init statement will often be a short variable declaration, and the
-variables declared there are visible only in the scope of the `for`
-statement.
+- 조건 표현: 매 모든 iteration 이전에 판별됩니다.
 
-The loop will stop iterating once the boolean condition evaluates to `false`.
+- 사후 구문: 매 iteration 마지막에 수행됩니다. 
 
-*Note:* Unlike other languages like C, Java, or JavaScript there are no parentheses
-surrounding the three components of the `for` statement and the braces `{`}` are
-always required.
+초기화 구문은 주로 짧은 변수 선언일 것이며, 거기서 선언된 변수들은 for문의 스코프 내에서만 보여집니다.
+
+반복문은 조건 판별의 boolean 값이 `false` 이면 iterating을 종료할 것 입니다.
+
+*주의:* C나 Java, JavaScript와 같은 다른 언어들과 달리, Go는 for문의 세 가지 구성 요소를 감싸는 괄호가 없고, 
+`{`}` 괄호가 항상 필수입니다.
 
 .play flowcontrol/for.go
 
-* For continued
+* 계속해서 For
 
-The init and post statements are optional.
+초기화 구문과 사후 구문은 필수는 아닙니다.
 
 .play flowcontrol/for-continued.go
 
-* For is Go's "while"
+* For 은 Go의 "while"
 
-At that point you can drop the semicolons: C's `while` is spelled `for` in Go.
+당신이 `;` 을 생략할 수 있다는 점에서 C의 `while` 은 Go에서 `for` 로 쓰입니다.
 
 .play flowcontrol/for-is-gos-while.go
 
-* Forever
+* 영원한 For
 
-If you omit the loop condition it loops forever, so an infinite loop is compactly expressed.
+만약 당신이 그것이 영원한 반복문에서 반복 조건을 생략한다면, 그것을 통해 무한 루프 또한 간편히 표현될 수 있습니다.
 
 .play flowcontrol/forever.go
 
 * If
 
-Go's `if` statements are like its `for` loops; the expression need not be
-surrounded by parentheses `(`)` but the braces `{`}` are required.
+Go의 `if` 문은 `for` 반복문과 비슷합니다. 그 표현은 `(`)` 괄호로 둘러쌓일 필요는 없지만, `{`}` 괄호는 필수입니다.
 
 .play flowcontrol/if.go
 
-* If with a short statement
+* 짧은 구문과의 If
 
-Like `for`, the `if` statement can start with a short statement to execute before the condition.
+`for` 과 마찬가지로, `if` 문 또한 조건문 전에 수행될 짧은 구문으로 시작될 수 있습니다.
 
-Variables declared by the statement are only in scope until the end of the `if`.
+그 짧은 구문에서 선언된 변수들은 오직 `if` 문의 끝까지만 스코페 존재합니다.
 
-(Try using `v` in the last `return` statement.)
+(마지막 `return` 문에서 `v` 를 사용해보십시오.)
 
 .play flowcontrol/if-with-a-short-statement.go
 
-* If and else
+* If와 else
 
-Variables declared inside an `if` short statement are also available inside any
-of the `else` blocks.
+짧은 `if` 문 안에서 선언된 변수들은 어떠한 `else` 블럭에서든 사용이 가능합니다.
 
-(Both calls to `pow` return their results before the call to `fmt.Println`
-in `main` begins.)
+`pow` 에 대한 두 가지 호출 모두 `main`의 시작 부분에서 `fmt.Println`에 대한 호출하기 이전에 그들의 결과를 return 합니다.
 
 .play flowcontrol/if-and-else.go
 
-* Exercise: Loops and Functions
+* 실습: 반복문과 함수
 
-As a way to play with functions and loops, let's implement a square root function: given a number x, we want to find the number z for which z² is most nearly x.
+함수와 반복문을 가지고 노는 방법으로서 제곱근 함수를 도입해봅시다: x라는 숫자가 주어졌을 때, 우리는 z²이 x에 가장 가까운 숫자 z를 찾아낼 것입니다.
 
-Computers typically compute the square root of x using a loop.
-Starting with some guess z, we can adjust z based on how close z² is to x,
-producing a better guess:
+컴퓨터는 주로 x의 제곱근을 반복문을 사용해 연산합니다.
+어떠한 추측 값 z로부터 시작해, 우리는 z²가 x에 얼마나 가까운 가를 근거로 z의 더 좋은 값을 추정합니다.
 
 	z -= (z*z - x) / (2*z)
 
-Repeating this adjustment makes the guess better and better
-until we reach an answer that is as close to the actual square root as can be.
+이러한 조정을 반복함으로써 우리가 최대한 실제 제곱근에 가까운 정답에 도달할 때까지 추측은 점점 더 정확해집니다.
 
-Implement this in the `func`Sqrt` provided.
-A decent starting guess for z is 1, no matter what the input.
-To begin with, repeat the calculation 10 times and print each z along the way.
-See how close you get to the answer for various values of x (1, 2, 3, ...)
-and how quickly the guess improves.
+주어진 `func`Sqrt`에 이것을 도입하십시오.
+입력값이 어떻든 간에 z = 1이라는 괜찮은 가정에서 시작합니다.
+시작과 함께 계산을 10회 반복하고 각각의 z의 값을 출력하세요.(along the way??)
+당신이 x의 다양한 값(1, 2, 3, ...)에 얼마나 가까워지는 지 그리고 얼마나 빠르게 추측이 개선되는 지 보세요.
 
-Hint: To declare and initialize a floating point value,
-give it floating point syntax or use a conversion:
+힌트: 실수값을 선언하고 초기화하는 방법 - 값에 소수점을 입력해주거나 변환식을 사용하세요.
 
 	z := 1.0
 	z := float64(1)

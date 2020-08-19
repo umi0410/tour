@@ -10,7 +10,7 @@ angular.module('tour.values', []).
 value('tableOfContents', [{
     'id': 'mechanics',
     'title': 'Using the tour',
-    'description': '<p>Welcome to a tour of the <a href="https://golang.org">Go programming language</a>. The tour covers the most important features of the language, mainly:</p>',
+    'description': '<p><a href="https://golang.org">Go 프로그래밍 언어</a>로의 여행에 오신 것을 환영합니다. 이 여행은 Go 언어의 가장 중요한 특징들을 주로 다룹니다.</p>',
     'lessons': ['welcome']
 }, {
     'id': 'basics',

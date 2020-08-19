@@ -1,7 +1,7 @@
 환영합니다!
-이 여행 사용법을 배우십시오: 다른 강의들로 이동하는 방법과 코드를 실행하는 방법을 포함하여.
+이 여행 사용법을 배우십시오: 다른 강의들로 이동하는 방법과 코드를 실행하는 방법 등등
 
-Go의 저자들
+The Go Authors
 https://golang.org
 
 * 안녕하세요
@@ -21,8 +21,8 @@ https://golang.org
 - 다음 페이지로 가기 위해 [[javascript:highlight(".next-page")]["다음"]] 클릭 혹은 `PageDown` 키를 입력
 
 이 여행은 상호작용적입니다(바로바로 shell을 통해 이용 가능합니다). 이제 
-당신의 컴퓨터
 #appengine: 하나의 원격 서버
+당신의 컴퓨터
 에서 프로그램을 컴파일하고 실행시키고자한다면 [[javascript:highlightAndClick("#run")][Run]]을 클릭하십시오.
 그 결과는 아래 코드에 보여집니다.
 
@@ -31,14 +31,14 @@ https://golang.org
 프로그램을 수정하고 다시 실행해보십시오.
 
 당신이 [[javascript:highlightAndClick("#format")][Format]]
-(단축키: `Ctrl` + `Enter`)을 클ㄹ기할 때, 에디터 속의 글자는 [[https://golang.org/cmd/gofmt/][gofmt]] 툴을 이용해 생성됩니다.
+(단축키: `Ctrl` + `Enter`)을 클릭할 때, 에디터 속의 글자는 [[https://golang.org/cmd/gofmt/][gofmt]] 툴을 이용해 생성됩니다.
 당신은 [[javascript:highlightAndClick(".syntax-checkbox")][syntax]]버튼을 클릭함으로써 syntax highlight을 켜거나 끌 수 있습니다.
 
 당신이 이동할 준비가 되었을 때, [[javascript:highlightAndClick(".next-page")][오른쪽 화살표]]를 클릭하거나 혹은 `PageDown` 키를 눌러주세요.
 
 .play welcome/hello.go
 
-* Go 지역
+* Go local
 
 이 여행은 다른 언어들에서도 가능합니다:
 
@@ -86,7 +86,7 @@ https://golang.org
 #appengine:
 #appengine: playground에서 실행될 수 있는 프로그램은 제약이 있습니다.
 #appengine:
-#appengine: - playground 안에서 시간은 2009-11-10 23:00:00(이 날의 중요성을 결정 짓는 것은 독자들을 위한 활동입니다) UTC에 시작합니다. 이는 결과를 프로그램에게 결정론적으로 제공함으로써 그 프로그램들을 캐시하기 쉽게 만들어줍니다.
+#appengine: - playground 안에서 시간은 2009-11-10 23:00:00 UTC(이 날의 중요성을 결정 짓는 것은 독자들을 위한 활동입니다)에 시작합니다. 이는 결과를 프로그램에게 결정론적으로 제공함으로써 그 프로그램들을 캐시하기 쉽게 만들어줍니다.
 #appengine:
 #appengine: - 실행시간과 CPU, memory 사용에 대한 제약도 존재합니다. 그리고 프로그램은 외부 네트워크 호스트에 대한 접근을 할 수 없습니다.
 #appengine:
