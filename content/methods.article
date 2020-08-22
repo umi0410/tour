@@ -6,73 +6,73 @@ https://golang.org
 
 * Methods
 
-Go does not have classes.
-However, you can define methods on types.
+Go는 클래스를 가지지 않습니다.
 
-A method is a function with a special _receiver_ argument.
+하지만, 그와 같은 타입의 메소드를 정의할 수 있습니다.
 
-The receiver appears in its own argument list between the `func` keyword and
-the method name.
+그 메서드는 특별한 _receiver_ 인자가 있는 함수입니다.
 
-In this example, the `Abs` method has a receiver of type `Vertex` named `v`.
+그 receiver는 `func` 키워드와 메서드 이름 사이의 자체 인수 목록에 나타납니다.
+
+(receiver는 이하 리시버라고 칭하겠습니다.)
+
+이 예에서 `Abs` 메소드에는 `v` 라는 이름의 `Vertex` 유형의 리시버가 있습니다.
 
 .play methods/methods.go
 
-* Methods are functions
+* Methods는 함수입니다.
 
-Remember: a method is just a function with a receiver argument.
+기억할 것: 메소드는 리시버 인수가 있는 함수입니다.
 
-Here's `Abs` written as a regular function with no change in functionality.
+다음은 기능 변경 없이 일반 함수로 작성된 `Abs`입니다.
 
 .play methods/methods-funcs.go
 
-* Methods continued
+* Methods 계속
 
-You can declare a method on non-struct types, too.
+구조체가 아닌 형식에 대해서도 메소드를 선언할 수 있습니다.
 
-In this example we see a numeric type `MyFloat` with an `Abs` method.
+이 예에서는 `Abs` 메소드가 있는 숫자 유형 'MyFloat'을 확인할 수 있습니다.
 
-You can only declare a method with a receiver whose type is defined in the same
-package as the method.
-You cannot declare a method with a receiver whose type is defined in another
-package (which includes the built-in types such as `int`).
+메소드와 동일한 패키지에 유형이 정의된 수신자가 있는 메소드만 선언할 수 있습니다.
+
+유형이 다른 패키지 (`int`와 같은 빌트인 유형 포함)에 정의된 리시버로 메소드를 선언 할 수 없습니다.
 
 .play methods/methods-continued.go
 
-* Pointer receivers
+* 포인터 리시버
 
-You can declare methods with pointer receivers.
+포인터 리시버로 메소드를 선언 할 수 있습니다.
 
-This means the receiver type has the literal syntax `*T` for some type `T`.
-(Also, `T` cannot itself be a pointer such as `*int`.)
+이는 리시버 유형이 일부 유형 `T`에 대한 리터럴 구문 ``*T`를 가짐을 의미합니다.
+(또한 `T` 자체는`* int`와 같은 포인터가 될 수 없습니다.)
 
-For example, the `Scale` method here is defined on `*Vertex`.
+예를 들어, 여기서 `Scale`방법은 `*Vertex`에 정의되어 있습니다.
 
-Methods with pointer receivers can modify the value to which the receiver
-points (as `Scale` does here).
-Since methods often need to modify their receiver, pointer receivers are more
-common than value receivers.
+포인터 리시버가 있는 메소드는 리시버가 가리키는 값을 수정할 수 있습니다 (`Scale`이 여기에서 하는 것처럼).
 
-Try removing the `*` from the declaration of the `Scale` function on line 16
-and observe how the program's behavior changes.
+메소드는 종종 리시버를 수정해야하기에 포인터 리시버가 값 수신기보다 더 일반적입니다.
 
-With a value receiver, the `Scale` method operates on a copy of the original
-`Vertex` value.
-(This is the same behavior as for any other function argument.)
-The `Scale` method must have a pointer receiver to change the `Vertex` value
-declared in the `main` function.
+16 행의 `Scale` 함수 선언에서 `*`를 제거하고 프로그램의 동작이 어떻게 변하는 지 관찰해보십시오.
+
+값 수신기를 사용하면 `Scale`메서드가 원래 `Vertex`값의 복사본에서 작동합니다.
+(이것은 다른 함수 인수와 동일합니다.)
+
+`Scale`메소드에는 `main`함수에 선언된 `Vertex`값을 변경하기 위한 포인터 리시버가 있어야합니다.
 
 .play methods/methods-pointers.go
 
-* Pointers and functions
+* 포인터와 함수
 
-Here we see the `Abs` and `Scale` methods rewritten as functions.
+여기서 우리는 함수로 재 작성된 `Abs`와 `Scale` 메소드를 볼 수 있습니다.
 
-Again, try removing the `*` from line 16.
-Can you see why the behavior changes?
-What else did you need to change for the example to compile?
+다시 16 행에서 `*` 를 제거해보십시오.
 
-(If you're not sure, continue to the next page.)
+동작이 바뀌는 것을 볼 수 있습니까?
+
+예제를 컴파일하기 위해서는 무엇을 변경해야합니까?
+
+(확실하지 않은 경우 다음 페이지로 이동하십시오.)
 
 .play methods/methods-pointers-explained.go
 
