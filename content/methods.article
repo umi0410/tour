@@ -76,67 +76,62 @@ Go는 클래스를 가지지 않습니다.
 
 .play methods/methods-pointers-explained.go
 
-* Methods and pointer indirection
+* 메소드와 포인터 indirection
 
-Comparing the previous two programs, you might notice that
-functions with a pointer argument must take a pointer:
+이전 두 프로그램을 비교하여 포인터 인수의 함수가 다음과 같은 포인터를 사용해야함을 알 수 있다.
 
 	var v Vertex
 	ScaleFunc(v, 5)  // Compile error!
 	ScaleFunc(&v, 5) // OK
 
-while methods with pointer receivers take either a value or a pointer as the
-receiver when they are called:
+포인터 리시버가 있는 메소드는 다음과 같이 호출될 때 값이나 포인터를 리시버로 받아들인다.
 
 	var v Vertex
 	v.Scale(5)  // OK
 	p := &v
 	p.Scale(10) // OK
 
-For the statement `v.Scale(5)`, even though `v` is a value and not a pointer,
-the method with the pointer receiver is called automatically.
-That is, as a convenience, Go interprets the statement `v.Scale(5)` as
-`(&v).Scale(5)` since the `Scale` method has a pointer receiver.
+`v`라는 문장의 경우, `v.Scale(5)`는 `v`가 포인터가 아니라 값인데도 포인터 리시버가 있는 메서드는 자동으로 호출된다.
+
+즉, `Scale` 메서드가 포인터 리시버를 가졌기 때문에 편의상 Go는 `v.Scale(5)`라는 것을 `(&v).Scale(5)`로 해석한다.
 
 .play methods/indirection.go
 
-* Methods and pointer indirection (2)
+* 메소드와 포인터 indirection (2)
 
-The equivalent thing happens in the reverse direction.
+이와 동등한 일은 역방향에서 일어날 수 있다.
 
-Functions that take a value argument must take a value of that specific type:
+값 인수를 사용하는 함수는 다음과 같은 특정 유형의 값을 사용해야 한다.
 
 	var v Vertex
 	fmt.Println(AbsFunc(v))  // OK
 	fmt.Println(AbsFunc(&v)) // Compile error!
 
-while methods with value receivers take either a value or a pointer as the
-receiver when they are called:
+value receiver 가 있는 메서드는 다음과 같이 호출될 때, 값이나 포인터를 리시버로 사용한다.
 
 	var v Vertex
 	fmt.Println(v.Abs()) // OK
 	p := &v
 	fmt.Println(p.Abs()) // OK
 
-In this case, the method call `p.Abs()` is interpreted as `(*p).Abs()`.
+이 경우에, `p.Abs()`라는 메서드는 `(*p).Abs()`로 해석된다.
 
 .play methods/indirection-values.go
 
-* Choosing a value or pointer receiver
+* 값 또는 포인터 리시버 선택
 
-There are two reasons to use a pointer receiver.
+포인터 리시버를 사용하는 데에는 두 가지 이유가 있다.
 
-The first is so that the method can modify the value that its receiver points to.
+첫번째는, 메서드가 리시버가 가리키는 값을 수정할 수 있기 때문이다.
 
-The second is to avoid copying the value on each method call.
-This can be more efficient if the receiver is a large struct, for example.
+두번째는 각각의 메서드 call에서의 value 복사 문제를 피하기 위해서이다.
 
-In this example, both `Scale` and `Abs` are with receiver type `*Vertex`,
-even though the `Abs` method needn't modify its receiver.
+예를 들어 리시버가 큰 구조체라면 이것은 더 효율적일 수 있다.
 
-In general, all methods on a given type should have either value or pointer
-receivers, but not a mixture of both.
-(We'll see why over the next few pages.)
+이 예시에서, `Abs`메서드는 리시버 방식을 수정할 필요가 없지만 `Scale`과 `Abs`는 모두 `*Vertex`라는 리시버 타입으로 되어있다.
+
+일반적으로 특정 유형의 모든 방법에는 값이나 포인터 리시버가 있어야 하지만 둘 다 혼합되어서는 안된다.
+(몇 페이지에 걸쳐 그 이유를 알아보자.)
 
 .play methods/methods-with-pointer-receivers.go
 
