@@ -137,13 +137,13 @@ value receiver 가 있는 메서드는 다음과 같이 호출될 때, 값이나
 
 * Interfaces
 
-An _interface_type_ is defined as a set of method signatures.
+_interface_type_은 메소드의 시그니처 집합으로 정의됩니다.
 
-A value of interface type can hold any value that implements those methods.
+인터페이스 유형의 값은 해당 메소드를 구현하는 모든 값을 보유 할 수 있습니다.
 
-*Note:* There is an error in the example code on line 22.
-`Vertex` (the value type) doesn't implement `Abser` because
-the `Abs` method is defined only on `*Vertex` (the pointer type).
+*참고:* 예제 코드 22행에 오류가 있습니다.
+`Vertex`(값 유형)는 `Abser`를 구현하지 않습니다.
+왜냐하면 `Abs`메소드는 `*Vertex`(포인터 유형)에서만 정의되기 때문입니다.
 
 .play methods/interfaces.go
 
