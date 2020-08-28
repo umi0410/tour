@@ -64,89 +64,83 @@ C언어와는 다르게, Go는 포인터 산술을 지원하지 않습니다.
 
 * Arrays (배열)
 
-The type `[n]T` is an array of `n` values of type `T`.
-`[n]T` 타입은 타입 T의 n 값들의 배열입니다. 
-
-The expression
+`[n]T` 타입은 타입이 T인 n 값들의 배열입니다. 
 
 	var a [10]int
 
-declares a variable `a` as an array of ten integers.
+위 표현은 변수 a를 10개의 정수들의 배열로 선언한 것입니다.
 
-위 표현은 10개의 정수들의 배열인 `a`라는 배열을 선언한 것입니다.
-
-An array's length is part of its type, so arrays cannot be resized.
-This seems limiting, but don't worry;
-Go provides a convenient way of working with arrays.
+배열의 길이는 그 타입의 일부입니다. 따라서 배열의 크기를 조정할 수 없습니다.
+제약이 많을 것 같지만, 걱정하지 마세요!
+Go는 배열로 작업할 수 있는 편리한 방법을 제공합니다.
 
 .play moretypes/array.go
 
 
-* Slices
+* Slices (슬라이스)
 
-An array has a fixed size.
-A slice, on the other hand, is a dynamically-sized,
-flexible view into the elements of an array.
-In practice, slices are much more common than arrays.
+배열은 고정된 크기를 가지고 있습니다.
+반면에, 슬라이스는 배열의 요소들을 동적인 크기로, 유연하게 볼 수 있습니다. 
+실제로, 슬라이스는 배열보다 훨씬 흔합니다.
 
-The type `[]T` is a slice with elements of type `T`.
+`[]T` 타입은 `T` 타입을 원소로 가지는 슬라이스입니다.
 
-A slice is formed by specifying two indices, a low and
-high bound, separated by a colon:
+슬라이스는 콜론으로 구분된 두 개의 인덱스(하한과 상한)를 지정하여 형성됩니다. 
 
 	a[low : high]
 
-This selects a half-open range which includes the first
-element, but excludes the last one.
 
-The following expression creates a slice which includes
-elements 1 through 3 of `a`:
+이것은 첫 번째 요소를 포함하지만 마지막 요소를 제외하는 범위를 선택합니다.
+
+
+아래 표현은 a의 첫번째부터 세번째 요소를 
+포함하는 슬라이스를 생성합니다. 
+
 
 	a[1:4]
 
 .play moretypes/slices.go
 
 
-* Slices are like references to arrays
+* Slices are like references to arrays (배열을 참조하는 슬라이스)
 
-A slice does not store any data,
-it just describes a section of an underlying array.
+슬라이스는 어떤 데이터도 저장할 수 없습니다.
+이것은 단지 기본 배열의 한 영역을 나타낼 뿐입니다.
 
-Changing the elements of a slice modifies the
-corresponding elements of its underlying array.
+슬라이스의 요소를 변경하면 기본 배열의 해당 요소가 수정됩니다.
 
-Other slices that share the same underlying array will see those changes.
+동일한 기본 배열을 공유하는 다른 슬라이스는 이러한 변경사항을 볼 수 있습니다.
 
 .play moretypes/slices-pointers.go
 
 
-* Slice literals
+* Slice literals (슬라이스 리터럴)
 
-A slice literal is like an array literal without the length.
+슬라이스 리터럴은 길이가 없는 배열 리터럴와 같습니다.
 
-This is an array literal:
+
+아래는 배열 리터럴입니다.
 
 	[3]bool{true, true, false}
 
-And this creates the same array as above,
-then builds a slice that references it:
+이렇게 하면 위와 동일한 배열이 생성되고,
+이를 참조하는 슬라이스가 만들어집니다.
 
 	[]bool{true, true, false}
 
 .play moretypes/slice-literals.go
 
 
-* Slice defaults
+* Slice defaults (슬라이스 기본 값)
 
-When slicing, you may omit the high or low bounds to use their defaults instead.
+상한 또는 하한을 생략하면, 슬라이싱할 때 기본 값을 사용할 수 있습니다.
+하한의 경우 기본 값은 0이고, 상한의 경우 슬라이스의 길이입니다.
 
-The default is zero for the low bound and the length of the slice for the high bound.
-
-For the array
 
 	var a [10]int
 
-these slice expressions are equivalent:
+위 배열에서 아래 슬라이스 표현식들은
+전부 동일한 의미입니다.
 
 	a[0:10]
 	a[:10]
@@ -156,47 +150,46 @@ these slice expressions are equivalent:
 .play moretypes/slice-bounds.go
 
 
-* Slice length and capacity
+* Slice length and capacity (슬라이스의 길이와 용량)
 
-A slice has both a _length_ and a _capacity_.
+슬라이스는 _length(길이)_와 _capacity(용량)_를 둘다 가지고 있습니다. 
 
-The length of a slice is the number of elements it contains.
+슬라이스의 길이란 슬라이스가 포함하는 요소의 개수입니다.
 
-The capacity of a slice is the number of elements in the underlying array,
-counting from the first element in the slice.
+슬라이스의 용량이란 슬라이스의 첫 번째 요소부터 계산하는 
+기본 배열의 요소의 개수입니다. 
 
-The length and capacity of a slice `s` can be obtained using the expressions
-`len(s)` and `cap(s)`.
+슬라이스 `s`의 길이와 용량은 `len(s)`와 `cap(s)` 식으로 얻을 수 있습니다.
 
-You can extend a slice's length by re-slicing it,
-provided it has sufficient capacity.
-Try changing one of the slice operations in the example program to extend it
-beyond its capacity and see what happens.
+슬라이스의 길이를 연장하기 위해서는 슬라이스에 충분한 용량이 있을 때, 
+다시 슬라이싱을 하면 됩니다.  
+예제의 슬라이스 작업중 하나를 슬라이스의 용량을 넘어가도록 변경하여
+어떤 일이 발생하는지 확인해 보세요.   
+
 
 .play moretypes/slice-len-cap.go
 
 
-* Nil slices
+* Nil slices (nil 슬라이스)
 
-The zero value of a slice is `nil`.
+슬라이스의 zero value는 `nil` 입니다.
 
-A nil slice has a length and capacity of 0
-and has no underlying array.
+nil 슬라이스의 길이와 용량은 0이며, 기본 배열을 가지고 있지 않습니다.
 
 .play moretypes/nil-slices.go
 
 
-* Creating a slice with make
+* Creating a slice with make (make 함수로 슬라이스 만들기)
 
-Slices can be created with the built-in `make` function;
-this is how you create dynamically-sized arrays.
+슬라이스는 내장된 `make` 함수로 생성할 수 있습니다.
+이것은 동적 크기의 배열을 생성하는 방법입니다.
 
-The `make` function allocates a zeroed array
-and returns a slice that refers to that array:
+`make` 함수는 0으로 이루어진 배열을 할당합니다.
+그리고 해당 배열을 참조하는 슬라이스를 반환합니다.
 
 	a := make([]int, 5)  // len(a)=5
 
-To specify a capacity, pass a third argument to `make`:
+용량을 지정하려면, `make` 함수의 세 번째 인자에 값을 전달하면 됩니다.
 
 	b := make([]int, 0, 5) // len(b)=0, cap(b)=5
 
@@ -206,30 +199,29 @@ To specify a capacity, pass a third argument to `make`:
 .play moretypes/making-slices.go
 
 
-* Slices of slices
+* Slices of slices (슬라이스의 슬라이스)
 
-Slices can contain any type, including other slices.
+슬라이스는 다른 슬라이스를 포함하여 모든 타입을 담을 수 있습니다. 
 
 .play moretypes/slices-of-slice.go
 
 
-* Appending to a slice
+* Appending to a slice (슬라이스에 요소 추가하기)
 
-It is common to append new elements to a slice, and so Go provides a built-in
-`append` function. The [[https://golang.org/pkg/builtin/#append][documentation]]
-of the built-in package describes `append`.
+슬라이스에 새로운 요소를 추가하는 것이 일반적입니다.
+따라서 Go는 내장된 `append` 함수를 제공합니다.
+[[https://golang.org/pkg/builtin/#append][문서]]에 `append` 내장 함수의 설명이 있습니다.
 
 	func append(s []T, vs ...T) []T
 
-The first parameter `s` of `append` is a slice of type `T`, and the rest are
-`T` values to append to the slice.
+`append`의 첫번째 파라미터 `s`는 슬라이스의 타입 `T`입니다.
+그리고 나머지 `T` 값들은 슬라이스에 추가할 값들입니다.
 
-The resulting value of `append` is a slice containing all the elements of the
-original slice plus the provided values.
+`append`의 결과 값은 원래 슬라이스의 모든 요소와 
+추가로 제공된 값들을 포함하는 슬라이스입니다.
 
-If the backing array of `s` is too small to fit all the given values a bigger
-array will be allocated. The returned slice will point to the newly allocated
-array.
+만약 `s`의 원래 배열이 너무 작아서 주어진 값을 모두 추가할 수 없을 경우,
+더 큰 배열이 할당됩니다. 이 때 반환된 슬라이스는 새로 할당된 배열을 가리킵니다.
 
 (To learn more about slices, read the [[https://blog.golang.org/go-slices-usage-and-internals][Slices: usage and internals]] article.)
 
