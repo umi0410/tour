@@ -4,74 +4,76 @@
 The Go Authors
 https://golang.org
 
-* Pointers
+* Pointers (포인터)
 
-Go has pointers.
-A pointer holds the memory address of a value.
+Go는 포인터를 지원합니다.
+포인터는 값의 메모리 주소를 가지고 있습니다.
 
-The type `*T` is a pointer to a `T` value. Its zero value is `nil`.
+`*T` 타입은 `T` 값을 가리키는 포인터입니다. 이것의 zero value는 `nil` 입니다.
 
 	var p *int
 
-The `&` operator generates a pointer to its operand.
+`&` 연산자는 이것의 피연산자에 대한 포인터를 생성합니다.
 
 	i := 42
 	p = &i
 
-The `*` operator denotes the pointer's underlying value.
+`*` 연산자는 포인터가 가리키는 주소의 값을 나타냅니다.
 
-	fmt.Println(*p) // read i through the pointer p
-	*p = 21         // set i through the pointer p
+	fmt.Println(*p) // 포인터 p를 통해 i 읽기
+	*p = 21         // 포인터 p를 통해 i 설정
 
-This is known as "dereferencing" or "indirecting".
+이것은 "역 참조" 또는 "간접 참조"로 알려져 있습니다.
 
-Unlike C, Go has no pointer arithmetic.
+C언어와는 다르게, Go는 포인터 산술을 지원하지 않습니다.
 
 .play moretypes/pointers.go
 
-* Structs
+* Structs (구조체)
 
-A `struct` is a collection of fields.
+구조체는 필드의 집합체입니다.
 
 .play moretypes/structs.go
 
 * Struct Fields
 
-Struct fields are accessed using a dot.
+구조체의 필드는 .(dot)으로 접근할 수 있습니다.
 
 .play moretypes/struct-fields.go
 
 * Pointers to structs
 
-Struct fields can be accessed through a struct pointer.
+구조체 포인터를 통해서 구조체 필드를 접근할 수 있습니다.
 
-To access the field `X` of a struct when we have the struct pointer `p` we could
-write `(*p).X`.
-However, that notation is cumbersome, so the language permits us instead to
-write just `p.X`, without the explicit dereference.
+`(*p).X`로 작성하면, 구조체 포인터 `p` 에서 구조체의 `X` 필드에 접근할 수 있습니다.
+
+그러나 위 표기법은 번거로울 수 있습니다. 따라서 이 언어는 역 참조를 명시할 필요 없이 `p.X`로 작성할 수 있습니다.
 
 .play moretypes/struct-pointers.go
 
 * Struct Literals
 
-A struct literal denotes a newly allocated struct value by listing the values of its fields.
+구조체 리터럴은 필드 값을 나열하여 새로 할당된 구조체 값을 나타냅니다.
 
-You can list just a subset of fields by using the `Name:` syntax. (And the order of named fields is irrelevant.)
+ `Name:` 구문으로 필드의 하위 집합만 나열할 수 있습니다. (명명된 필드의 순서는 무관합니다.)
 
-The special prefix `&` returns a pointer to the struct value.
+특별한 접두사 `&`은 구조체 값으로 포인터를 반환합니다. 
 
 .play moretypes/struct-literals.go
 
 
-* Arrays
+* Arrays (배열)
 
 The type `[n]T` is an array of `n` values of type `T`.
+`[n]T` 타입은 타입 T의 n 값들의 배열입니다. 
 
 The expression
 
 	var a [10]int
 
 declares a variable `a` as an array of ten integers.
+
+위 표현은 10개의 정수들의 배열인 `a`라는 배열을 선언한 것입니다.
 
 An array's length is part of its type, so arrays cannot be resized.
 This seems limiting, but don't worry;
