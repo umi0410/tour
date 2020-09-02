@@ -63,7 +63,7 @@ https://golang.org
 - [[https://go-tour-ua.appspot.com/][Ukrainian — Українська]]
 - [[https://go-tour-uz.appspot.com/][Uzbek — Ўзбекча]]
 
-계속하려면 [[javascript:highlightAndClick(".next-page")]["다음"]] 버튼을 클릭하거나 `PageDown` 키를 누르십시오.
+계속하려면 [[javascript:highlightAndClick(".next-page")]["다음"]] 버튼을 클릭하거나 `PageDown` 키를 누르십시오.
 
 #appengine: * Go offline (optional)
 #appengine:
