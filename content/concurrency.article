@@ -1,106 +1,114 @@
-Concurrency
-Go provides concurrency constructions as part of the core language. This lesson presents them and gives some examples on how they can be used.
+Concurrency (동시성)
+Go는 동시성 구조를 언어의 핵심의 일부분으로서 제공합니다. 이번 강의에서 그러한 구조들과 그것들이 어떻게 사용되는 지에 대한 예시를 보여드리겠습니다.
 
 The Go Authors
 https://golang.org
 
 * Goroutines
 
-A _goroutine_ is a lightweight thread managed by the Go runtime.
+_goroutine_은 Go 런타임에 의해 관리되는 경량 쓰레드입니다.
 
 	go f(x, y, z)
 
-starts a new goroutine running
+새로운 goroutine을시작합니다.
 
 	f(x, y, z)
 
-The evaluation of `f`, `x`, `y`, and `z` happens in the current goroutine and the execution of `f` happens in the new goroutine.
+f와 x, y, z의 evaluation은 현재의 goroutine에서 일어나고, `f` 의 실행은 새로운 goroutine에서 일어납니다.
 
-Goroutines run in the same address space, so access to shared memory must be synchronized. The [[https://golang.org/pkg/sync/][`sync`]] package provides useful primitives, although you won't need them much in Go as there are other primitives. (See the next slide.)
+goroutine은 같은 주소의 공간에서 실행되고, 따라서 공유된 메모리는 synchronous(동기적) 해야합니다.
+Go에 다른 기본형들이 존재하는 것처 당신이 Go에서 sync와 관련된 기본 기능이 필요없다하더라도 [[https://golang.org/pkg/sync/][`sync`]] 패키지는 유용한 기본형을 제공합니다.
+(다음 페이지에서 자세히 확인해보십시오.)
+goroutine은 같은 주소 공간에서 실행되고 따라서 공유된 메모리에 대한 접근은 synchronous(동기적) 해야만합니다.
+
 
 .play concurrency/goroutines.go
 
-* Channels
+* Channel
 
-Channels are a typed conduit through which you can send and receive values with the channel operator, `<-`.
+Channel은 당신이 채널 연산자인 `<-` 을 통해 값을 주고 받을 수 있는 하나의 분리된 통로입니다.
 
-	ch <- v    // Send v to channel ch.
-	v := <-ch  // Receive from ch, and
-	           // assign value to v.
+	ch <- v    // 채널 ch에 v를 전송한다.
+	v := <-ch  // ch로 부터 값을 받고,
+	           // 값을 v에 대입한다.
 
-(The data flows in the direction of the arrow.)
+(데이터는 화살표의 방향대로 흐릅니다.)
 
-Like maps and slices, channels must be created before use:
+channel은 map과 slice처럼 사용하기 전에 생성되어야만합니다:
 
 	ch := make(chan int)
 
-By default, sends and receives block until the other side is ready. This allows goroutines to synchronize without explicit locks or condition variables.
+기본적으로 전송과 수신은 다른 한 쪽이 준비될 때까지 block 상태입니다. 이는 명시적인 lock이나 조건 변수 없이 goroutine이 synchronous하게 작업될 수 있도록 합니다.
 
-The example code sums the numbers in a slice, distributing the work between two goroutines.
-Once both goroutines have completed their computation, it calculates the final result.
+예제 코드는 두 개의 goroutine에 작업을 분산시키면서 slice 있는 숫자들을 더합니다.
+두 goroutine이 그들의 연산을 완료하면, 최종 결과를 계산합니다.
 
 .play concurrency/channels.go
 
 * Buffered Channels
 
-Channels can be _buffered_.  Provide the buffer length as the second argument to `make` to initialize a buffered channel:
+Channel은 _buffered_ 될 수 있습니다. buffered channel을 초기화하기 위해 `make` 에 두 번째 인자로 buffer 길이를 제공하십시오.
 
 	ch := make(chan int, 100)
 
-Sends to a buffered channel block only when the buffer is full. Receives block when the buffer is empty.
+buffered channel 로의 전송은 그 buffer의 사이즈가 꽉 찼을 때에만 block 됩니다. buffer로 부터의 수신은 그 buffer가 비어있을 때 block 됩니다.
 
-Modify the example to overfill the buffer and see what happens.
+buffer가 초과도록 예제를 수정해보고 어떤 일이 발생하는 지 확인해보십시오.
 
 .play concurrency/buffered-channels.go
 
-* Range and Close
+* Range와 Close
 
-A sender can `close` a channel to indicate that no more values will be sent. Receivers can test whether a channel has been closed by assigning a second parameter to the receive expression: after
+전송자는 더 이상 보낼 데이터가 없다는 것을 암시하기 위해 channel을 close할 수 있습니다.
+수신자는 수신에 대한 표현에 두 번째 매개변수를 할당함으로써 채널이 닫혔는지 테스트할 수 있습니다.
 
 	v, ok := <-ch
 
-`ok` is `false` if there are no more values to receive and the channel is closed.
+만약 더 수신할 값이 없고, channel이 닫혀있다면 `ok` 는 `false` 입니다.
 
-The loop `for`i`:=`range`c` receives values from the channel repeatedly until it is closed.
+`for`i`:=`range`c` 반복문은 channel이 닫힐 때까지 반복해서 channel에서 값을 수신합니다.
 
-*Note:* Only the sender should close a channel, never the receiver. Sending on a closed channel will cause a panic.
+*주의:* 절대로 수신자가 아닌 전송자만이 channel을 닫아야합니다. 닫힌 channel에 전송하는 것은 panic을 야기할 것입니다.
 
-*Another*note:* Channels aren't like files; you don't usually need to close them. Closing is only necessary when the receiver must be told there are no more values coming, such as to terminate a `range` loop.
+*하나*더*주의:* Channel은 파일과 다릅니다.; 당신은 보통 channel을 닫을 필요는 없습니다.
+channel을 닫는 것은 `range` 반복문을 종료시키는 것과 같이 수신자가 더 이상 들어오는 값이 없다는 것을 알아야하는 경우에만 필요합니다.
 
 .play concurrency/range-and-close.go
 
 * Select
 
-The `select` statement lets a goroutine wait on multiple communication operations.
+`select` 문은 goroutine이 다중 커뮤니케이션 연산에서 대기할 수 있게 합니다.
 
-A `select` blocks until one of its cases can run, then it executes that case.  It chooses one at random if multiple are ready.
+`select` 는 자의 case들 중 하나가 실행될 때까지 block됩니다. 그리고나서 select문은 해당하는 case를 수행합니다. 만약 다수의 case가 준비되는 경우에는 select가 무작위로 하나를 선택합니다.
 
 .play concurrency/select.go
 
 * Default Selection
 
-The `default` case in a `select` is run if no other case is ready.
+`select` 에서의 `default` case 는 다른 case들이 모두 준비되지 않았을 때 실행됩니다.
 
-Use a `default` case to try a send or receive without blocking:
+block 없이 전송이나 수신을 수행하도 `default` case를 사용해봅시다.
 
 	select {
 	case i := <-c:
 		// use i
 	default:
-		// receiving from c would block
+		// c로부터 값을 받아오는 것이 block된 경우
 	}
 
 .play concurrency/default-selection.go
 
-* Exercise: Equivalent Binary Trees
+* 실습: 동일한 이진 트리
 
-There can be many different binary trees with the same sequence of values stored in it. For example, here are two binary trees storing the sequence 1, 1, 2, 3, 5, 8, 13.
+이진 트리 속에 저장된 값들의 순서가 같은 많은 각각의 이진 트리들이 존재할 수 있습니다.
+예를 들어 여기 두 1, 1, 2, 3, 5, 8, 13의 순서를 가진 이진 트리가 있습니다.
 
 .image /content/img/tree.png
 
-A function to check whether two binary trees store the same sequence is quite complex in most languages. We'll use Go's concurrency and channels to write a simple solution.
+두 이진트리가 동일한 순서를 가졌는 지를 체크하는 함수는 대부분의 언어에서 꽤나 복잡합니다.
+우리는 간단한 해결책을 만들기 위해 Go의 concurrency(동시성)과 channel을 이용할 것입니다.
 
-This example uses the `tree` package, which defines the type:
+이 예시는 다음의 타입을 정의한 `tree` 패키지를 사용합니다:
 
 	type Tree struct {
 		Left  *Tree
@@ -108,101 +116,97 @@ This example uses the `tree` package, which defines the type:
 		Right *Tree
 	}
 
+[[javascript:click('.next-page')][다음 페이]]에서 설명 계속하기.
 
-Continue description on [[javascript:click('.next-page')][next page]].
+* 실습: 동일한 이진 트리
 
-* Exercise: Equivalent Binary Trees
+*1.* `Walk` 함수를 도입하십시오.
 
-*1.* Implement the `Walk` function.
+*2.* `Walk` 함수를 테스트해보십시오.
 
-*2.* Test the `Walk` function.
+`tree.New(k)` 함수는 무작위로 구성된(하지만 항상 정렬된) `k`, `2k`, `3k`, ..., `10k`의 값을 가진 이진트리를 생성합니다.
 
-The function `tree.New(k)` constructs a randomly-structured (but always sorted) binary tree holding the values `k`, `2k`, `3k`, ..., `10k`.
-
-Create a new channel `ch` and kick off the walker:
+새로운 채널 `ch` 를 생성하고 walker를 시작하십시오:
 
 	go Walk(tree.New(1), ch)
 
-Then read and print 10 values from the channel. It should be the numbers 1, 2, 3, ..., 10.
+그리고 channel에서 값을 읽고 10을 출력하십시오. 그 출력은 1, 2, 3, ..., 10의 숫자여야합니다.
 
-*3.* Implement the `Same` function using `Walk` to determine whether `t1` and `t2` store the same values.
+*3.* `t1` 과 `t2` 가 같은 값을 가졌는지를 판단하기 위해 `Walk` 를 사용하는 `Same` 함수를 도입하십시오.
 
-*4.* Test the `Same` function.
+*4.* `Same` 함수를 테스트해보십시오.
 
-`Same(tree.New(1),`tree.New(1))` should return true, and `Same(tree.New(1),`tree.New(2))` should return false.
+`Same(tree.New(1),`tree.New(1))` 는 true를 반환해야하고 `Same(tree.New(1),`tree.New(2))` 는 false를 반환해야합니다.
 
-The documentation for `Tree` can be found [[https://godoc.org/golang.org/x/tour/tree#Tree][here]].
+`Tree` 에 대한 문서는 [[https://godoc.org/golang.org/x/tour/tree#Tree][여기]]서 보실 수 있습니다.
 
 .play concurrency/exercise-equivalent-binary-trees.go
 
 * sync.Mutex
 
-We've seen how channels are great for communication among goroutines.
+우리는 channel이 goroutine간의 communication에서 얼마나 훌륭한 지 알아봤습니다.
 
-But what if we don't need communication? What if we just want to make sure only
-one goroutine can access a variable at a time to avoid conflicts?
+하지만 우리가 그러한 communication이 필요없다면 어떨까요?
+우리가 충돌을 피하기 위해 단순히 오직 하나의 goroutine만이 어떤 순간에 어떤 변수에 접근할 수 있도록 하고싶다면 어떨까요?
 
-This concept is called _mutual_exclusion_, and the conventional name for the data structure that provides it is _mutex_.
+이러한 개념은 _mutual_exclusion_ 이라고 불리고, 자료 구조에서 그것의 관습적인 이름은 _mutex_ 입니다.
 
-Go's standard library provides mutual exclusion with
-[[https://golang.org/pkg/sync/#Mutex][`sync.Mutex`]] and its two methods:
+Go의 표준 라이브러리는 [[https://golang.org/pkg/sync/#Mutex][`sync.Mutex`]]와 그것의 두 가지 method를 통해 mutual exclusion을 제공합니다.
 
 - `Lock`
 - `Unlock`
 
-We can define a block of code to be executed in mutual exclusion by surrounding it
-with a call to `Lock` and `Unlock` as shown on the `Inc` method.
+우리는 `Inc` method에서 보여지듯 코드 블럭을 `Lock` 과 `Unlock` 호출로 감쌈으로써 mutual exclusion 속에서 수행될 코드 블럭을 정의할 수 있습니다.
 
-We can also use `defer` to ensure the mutex will be unlocked as in the `Value` method.
+우리는 `Value` method 속에서 mutex가 unlocked 될 것이라는 것을 확실히 하기 위해 `defer` 을 사용할 수도 있습니다.
 
 .play concurrency/mutex-counter.go
 
-* Exercise: Web Crawler
+* 실습: 웹 크롤러
 
-In this exercise you'll use Go's concurrency features to parallelize a web crawler.
+이번 실습에서 당신은 웹 크롤러를 병렬로 작업하기 위해 Go의 concurrency(동시성) 특징을 사용할 것입니다.
 
-Modify the `Crawl` function to fetch URLs in parallel without fetching the same URL twice.
+같은 URL을 두 번 수집하지 않으면서 URL들을 병력적으로 수집하도록 `Crawl` 함수를 수정하십시오.
 
-_Hint_: you can keep a cache of the URLs that have been fetched on a map, but maps alone are not
-safe for concurrent use!
+_힌트_: 당신은 수집된 URL의 캐시를 map에 보유할 수도 있습니다. 하지만 map 만으로는 동시적 사용에 안전하지 않습니다.
 
 .play concurrency/exercise-web-crawler.go
 
-* Where to Go from here...
+* 여기서부터 나아갈 곳...
 
-#appengine: You can get started by
+#appengine: 당신은
 #appengine: [[https://golang.org/dl/][installing Go]].
+#appengine: 를 통해 시작해나갈 수 있습니다.
 
-#appengine: Once you have Go installed, the
-The
-[[https://golang.org/doc/][Go Documentation]] is a great place to
-#appengine: continue.
-start.
-It contains references, tutorials, videos, and more.
+#appengine: Go를 설치했다면 [[https://golang.org/doc/][Go Documentation]]는 계속해서 나아가기에 좋은 곳입니다.
 
-To learn how to organize and work with Go code, watch [[https://www.youtube.com/watch?v=XCsL89YtqCs][this screencast]] or read [[https://golang.org/doc/code.html][How to Write Go Code]].
+Go를 설치했다면 [[https://golang.org/doc/][Go Documentation]]는 시작하기 좋은 곳입니다.
+그곳에는 레퍼런스와 튜토리얼, 영상 그리고 그 외의 것도 있습니다.
 
-If you need help with the standard library, see the [[https://golang.org/pkg/][package reference]]. For help with the language itself, you might be surprised to find the [[https://golang.org/ref/spec][Language Spec]] is quite readable.
+Go 코드를 조직화하고 이용하는 방법을 배우고자 한다면, [[https://www.youtube.com/watch?v=XCsL89YtqCs][이 영]]상을 시청해보시거나
+[[https://golang.org/doc/code.html][Go 코드를 작성하는 방법]]을 읽어보십시오.
 
-To further explore Go's concurrency model, watch
+만약 당신이 표준 라이브러리에 대한 도움이 필요하다면, [[https://golang.org/pkg/][패키지 reference]]를 보십시오.
+언어 자체에 대한 도움을 원하시는 경우,[[https://golang.org/ref/spec][Language Spec]]이 꽤나 잘 읽힌다는 점에 놀라실 수도 있습니다.
+
+Go의 cucurrency(동시성) 모델을 더 탐구하기 위해서는
 [[https://www.youtube.com/watch?v=f6kdp27TYZs][Go Concurrency Patterns]]
 ([[https://talks.golang.org/2012/concurrency.slide][slides]])
-and
+와
 [[https://www.youtube.com/watch?v=QDDwwePbDtw][Advanced Go Concurrency Patterns]]
-([[https://talks.golang.org/2013/advconc.slide][slides]])
-and read the
+([[https://talks.golang.org/2013/advconc.slide][slides]]),
 [[https://golang.org/doc/codewalk/sharemem/][Share Memory by Communicating]]
-codewalk.
+코드 설명을 봐주세요.
 
-To get started writing web applications, watch
+웹 애플리케이션을 작성하려면
 [[https://vimeo.com/53221558][A simple programming environment]]
 ([[https://talks.golang.org/2012/simple.slide][slides]])
-and read the
-[[https://golang.org/doc/articles/wiki/][Writing Web Applications]] tutorial.
+을 시청하시고
+[[https://golang.org/doc/articles/wiki/][Writing Web Applications]] 튜토리얼을 읽어보십시오.
 
-The [[https://golang.org/doc/codewalk/functions/][First Class Functions in Go]] codewalk gives an interesting perspective on Go's function types.
+[[https://golang.org/doc/codewalk/functions/][First Class Functions in Go]] 코드 설명은  Go의 함수 타입에 대한 흥미로운 관점을 제시합니다.
 
-The [[https://blog.golang.org/][Go Blog]] has a large archive of informative Go articles.
+[[https://blog.golang.org/][Go Blog]]는 Go에 대한 유용한 글을 담은 방대한 아카이브입니다.
 
-Visit [[https://golang.org][golang.org]] for more.
+더 많은 내용을 원하신다면 [[https://golang.org][golang.org]]을 방문해주십시오.
 
