@@ -25,7 +25,7 @@ value('tableOfContents', [{
 }, {
     'id': 'concurrency',
     'title': 'Concurrency',
-    'description': '<p>Go provides concurrency features as part of the core language.</p><p>This module goes over goroutines and channels, and how they are used to implement different concurrency patterns.</p>',
+    'description': '<p>Go는 언어의 핵심 요소로 concurrency(동시성) 특징을 제공합니다.</p><p>이 모듈은 goroutine과 channel 그리고 다른 concurrency 패턴을 도입하기 위해 그것들이 어떻게 사용되는지 살펴봅니다.</p>',
     'lessons': ['concurrency']
 }]).
 
@@ -50,7 +50,7 @@ value('translation', {
 
     // GitHub issue template: update repo and messaging when translating.
     'github-repo': 'github.com/golang-ko/tour',
-    'issue-title': 'tour: [REPLACE WITH SHORT DESCRIPTION]',
+    'issue-title': 'tour: [이 부분을 당신의 ISSUE에 대한 요약으로 변경해주세요.]',
     'issue-message': '당신의 Issue를 묘사하도록 위의 제목을 변경한 후 필요하다면 코드도 포함하여 여기에 피드백을 추가해주세요.',
     'context': 'Context',
 }).
