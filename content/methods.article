@@ -147,99 +147,93 @@ _interface_type_은 메소드의 시그니처 집합으로 정의됩니다.
 
 .play methods/interfaces.go
 
-* Interfaces are implemented implicitly
+* 인터페이스의 암시적 구현.
 
-A type implements an interface by implementing its methods.
-There is no explicit declaration of intent, no "implements" keyword.
+type implements는 메소드를 실행함으로써 인터페이스를 구현합니다.
+명시적 intent의 선언도, "implementation"의 키워드도 없습니다.
 
-Implicit interfaces decouple the definition of an interface from its
-implementation, which could then appear in any package without prearrangement.
+암시적 인터페이스는 인터페이스의 정의를 구현으로부터 분리하며,
+이는 사전 정렬 없이 어떠한 패키지에 등장할 수 있습니다.
 
 .play methods/interfaces-are-satisfied-implicitly.go
 
-* Interface values
+* 인터페이스 값
 
-Under the hood, interface values can be thought of as a tuple of a value and a
-concrete type:
+hood 아래에서, 인터페이스의 값은 값과 콘크리트 타입의 튜플이라고 생각할 수 있습니다.
 
 	(value, type)
 
-An interface value holds a value of a specific underlying concrete type.
+인터페이스 값은 특정 기초 콘크리트 유형의 가치를 가집니다.
 
-Calling a method on an interface value executes the method of the same name on
-its underlying type.
+인터페이스 값으로 메소드를 호출하면 기본 형식에 동일한 이름의 메서드가 실행됩니다.
 
 .play methods/interface-values.go
 
-* Interface values with nil underlying values
+* Nill 인터페이스 값
 
-If the concrete value inside the interface itself is nil,
-the method will be called with a nil receiver.
+인터페이스 자체 내부의 콘크리트 값이 0일 경우, 그 메소드는 nil 리시버로 호출됩니다.
 
-In some languages this would trigger a null pointer exception,
-but in Go it is common to write methods that gracefully handle being called
-with a nil receiver (as with the method `M` in this example.)
+일부 언어에서는 이것이 null 포인터 예외를 발생시키지만,
+Go 에서는 nil 리시버로 호출되는 것으로 불리는 매우 좋은 방법을 사용하는 것이 일반적입니다.
+(이 예시의 `M`이라는 방법과 같습니다.)
 
-Note that an interface value that holds a nil concrete value is itself non-nil.
+nil 콘크리트 값을 갖는 인터페이스 값 자체가 nil이 아니라는 점에 유의해야 합니다.
 
 .play methods/interface-values-with-nil.go
 
-* Nil interface values
+* Nil 인터페이스 값
 
-A nil interface value holds neither value nor concrete type.
+Nil 인터페이스 값은 값 또는 콘크리트 유형 모두를 가지지 않습니다.
 
-Calling a method on a nil interface is a run-time error because there is no
-type inside the interface tuple to indicate which _concrete_ method to call.
+nil 인터페이스에서 메소드를 호출하는 것은 런타임 에러입니다.
+왜냐하면, 어떠한 _구체적인_ 메소드를 호출할지를 나타내는 인터페이스 튜플 내부의 타입이 없기 때문입니다.
 
 .play methods/nil-interface-values.go
 
-* The empty interface
+* 빈 인터페이스 값
 
-The interface type that specifies zero methods is known as the _empty_interface_:
+0 메서드를 지칭하는 인터페이스 유형을 _empty_interface_라고 합니다:
 
 	interface{}
 
-An empty interface may hold values of any type.
-(Every type implements at least zero methods.)
+빈 인터페이스는 모든 유형의 값을 가질 수 있습니다.
+(모든 유형은 최소 0개의 메소드를 구현합니다.)
 
-Empty interfaces are used by code that handles values of unknown type.
-For example, `fmt.Print` takes any number of arguments of type `interface{}`.
+빈 인터페이스는 알 수 없는 값을 처리하는데 이용됩니다.
+예를 들어, `fmt.Print`는 `interface{}` 타입의 어떠한 인수라도 취할 수 있습니다.
 
 .play methods/empty-interface.go
 
-* Type assertions
+* 타입 선언
 
-A _type_assertion_ provides access to an interface value's underlying concrete value.
+_type_assertion_은 인터페이스 값의 기초적인 콘크리트 값에 대한 접근을 제공합니다.
 
 	t := i.(T)
 
-This statement asserts that the interface value `i` holds the concrete type `T`
-and assigns the underlying `T` value to the variable `t`.
+이는 인터페이스 값 `i`가 콘크리트 타입 `T`를 갖고 있으며,
+그 기본 값인 `T` 값을 변수 `t`에 할당하고 있다고 선언합니다.
 
-If `i` does not hold a `T`, the statement will trigger a panic.
+만약 `i`가 `T`를 갖지 못하면면 그 선언은 panic이 됩니다.
 
-To _test_ whether an interface value holds a specific type,
-a type assertion can return two values: the underlying value
-and a boolean value that reports whether the assertion succeeded.
+인터페이스 값이 특정 유형을 보유하는지 여부를 _test_하기 위해,
+타입 선언에서는 두 가지 값, 즉 기본 값과 선언 성공 여부를 보고하는 부울 값을 반환할 수 있습니다.
 
 	t, ok := i.(T)
 
-If `i` holds a `T`, then `t` will be the underlying value and `ok` will be true.
+만약 `i`가 `T`를 갖고 있다면, `t`는 underlying value가 되며, `ok`가 true를 반환합니다.
 
-If not, `ok` will be false and `t` will be the zero value of type `T`,
-and no panic occurs.
+만약 그렇지 않다면, `ok`는 거짓이 되고 `t`는 `T`라는 유형의 zero 값이 되며 어떠한 패닉도 발생하지 않습니다.
 
-Note the similarity between this syntax and that of reading from a map.
+이 구문과 map에서 읽는 구문 간의 유사성에 유의하십시오.
 
 .play methods/type-assertions.go
 
-* Type switches
+* 타입 스위치
 
-A _type_switch_ is a construct that permits several type assertions in series.
+_type_switch는 여러 타입의 선언을 직렬로 허용하는 구조입니다.
 
-A type switch is like a regular switch statement, but the cases in a type
-switch specify types (not values), and those values are compared against
-the type of the value held by the given interface value.
+타입 스위치는 일반 스위치문과 같지만 타입 스위치문의 경우에는 값이 아닌 타입을 명시하며,
+그 값들은 지정된 인터페이스 값에 의해 유지되는 값의 타입과 비교됩니다.
 
 	switch v := i.(type) {
 	case T:
@@ -250,15 +244,12 @@ the type of the value held by the given interface value.
 		// no match; here v has the same type as i
 	}
 
-The declaration in a type switch has the same syntax as a type assertion `i.(T)`,
-but the specific type `T` is replaced with the keyword `type`.
+타입 스위치의 선언은 타입 선언 `i.(T)`와 같은 구문을 가집니다.
+그러나 특정 타입인 `T`는 `type`이라는 키워드로 대체됩니다.
 
-This switch statement tests whether the interface value `i`
-holds a value of type `T` or `S`.
-In each of the `T` and `S` cases, the variable `v` will be of type
-`T` or `S` respectively and hold the value held by `i`.
-In the default case (where there is no match), the variable `v` is
-of the same interface type and value as `i`.
+이 스위치 문장은 인터페이스 값 `i`가 `T`형인지 `S`형인지 시험합니다.
+`T`와 `S`의 각각의 경우 변수 `v`는 각각 `T`형과 `S`형으로, `i`형이 보유한 값을 보유하게 됩니다.
+디폴트 케이스(일치하지 않는 경우)에서 변수 `v`는 인터페이스 종류와 값이 `i`와 같습니다.
 
 .play methods/type-switches.go
 
