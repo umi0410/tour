@@ -123,113 +123,108 @@ Outside a function, every statement begins with a keyword (`var`, `func`, and so
 
 .play basics/short-variable-declarations.go
 
-* Basic types
+* 기본 자료형
 
-Go's basic types are
+고의 기본 type들은 다음과 같습니다.
 
-	bool
+    bool
 
-	string
+    string
 
-	int  int8  int16  int32  int64
-	uint uint8 uint16 uint32 uint64 uintptr
+    int  int8  int16  int32  int64
+    uint uint8 uint16 uint32 uint64 uintptr
 
-	byte // alias for uint8
+    byte // uint8의 별칭
 
-	rune // alias for int32
-	     // represents a Unicode code point
+    rune // int32의 별칭
+         // 유니코드에서 code point를 의미합니다.
 
-	float32 float64
+    float32 float64
 
-	complex64 complex128
+    complex64 complex128
 
-The example shows variables of several types,
-and also that variable declarations may be "factored" into blocks,
-as with import statements.
+이 예시는 몇 가지 type의 변수를 보여줄 것이고, 그 변수 선언들은 import 문과 마찬가지로 조각으로 쪼개질 수 있습니다.
 
-The `int`, `uint`, and `uintptr` types are usually 32 bits wide on 32-bit systems and 64 bits wide on 64-bit systems.
-When you need an integer value you should use `int` unless you have a specific reason to use a sized or unsigned integer type.
+`int` 와 `uintptr` type은 보통 32-bit 시스템에서는 32 bit, 64-bit 시스템에서는 64 bit의 길이입니다.
+정수 값이 필요할 때에는 특정한 이유로 크기를 정해야하거나 unsigned 정수 type을 사용해야하는 게 아니라면 `int` 를 사용해야합니다.
 
 .play basics/basic-types.go
 
 * Zero values
 
-Variables declared without an explicit initial value are given their
-_zero_value_.
+명시적인 초깃값 없이 선언된 변수는 그것의 _zero_value_가 주어집니다.
 
-The zero value is:
+`zero value` 는 다음과 같습니다.
 
-- `0` for numeric types,
-- `false` for the boolean type, and
-- `""` (the empty string) for strings.
+- 숫자 type에는 0
+- boolean type에는 false
+- string에는 "" (빈 문자열)
 
-.play basics/zero.go
+* Type 변환
 
-* Type conversions
+`T(v)` 는 `v` 라는 값을 T type으로 변환시켜줍니다.
 
-The expression `T(v)` converts the value `v` to the type `T`.
+몇 가지 숫자 변환 예시:
 
-Some numeric conversions:
+    var i int = 42
+    var f float64 = float64(i)
+    var u uint = uint(f)
 
-	var i int = 42
-	var f float64 = float64(i)
-	var u uint = uint(f)
+혹은 좀 더 간단히:
 
-Or, put more simply:
+    i := 42
+    f := float64(i)
+    u := uint(f)
 
-	i := 42
-	f := float64(i)
-	u := uint(f)
-
-Unlike in C, in Go assignment between items of different type requires an
-explicit conversion.
-Try removing the `float64` or `uint` conversions in the example and see what happens.
+C와 달리 Go는 다른 type의 요소들 간의 할당에는 명시적인 변환을 필요로합니다.
+예시에서 `float64` 나 `uint` 변환을 제거해보시고, 어떤 일이 발생하는 지 보십시오.
 
 .play basics/type-conversions.go
 
-* Type inference
+* Inference type
 
-When declaring a variable without specifying an explicit type (either by using the `:=` syntax or `var`=` expression syntax), the variable's type is inferred from the value on the right hand side.
+`:=` 혹은 `var =` 표현을 이용해 명시적인 type을 정의하지 않고 변수를 선언할 때, 그 변수 type은 오른 편에 있는 값으로부터 유추됩니다.
 
-When the right hand side of the declaration is typed, the new variable is of that same type:
+변수 선언의 오른 쪽에 무언가 적힐 때, 새로운 변수는 그것과 같은 type이 됩니다.
 
-	var i int
-	j := i // j is an int
+    var i int
+    j := i // j 는 int
 
-But when the right hand side contains an untyped numeric constant, the new variable may be an `int`, `float64`, or `complex128` depending on the precision of the constant:
+하지만, 오른 편에 type이 정해지지 않은 숫자 상수가 올 때, 새 변수는 그 상수의 정확도에 따라 `int` 혹은 `float64`, `complex128` 이 됩니다.
 
-	i := 42           // int
-	f := 3.142        // float64
-	g := 0.867 + 0.5i // complex128
+    i := 42           // int
+    f := 3.142        // float64
+    g := 0.867 + 0.5i // complex128
 
-Try changing the initial value of `v` in the example code and observe how its type is affected.
+예시에서 `v` 의 초깃값을 바꿔보시고 `v` 의 type에 어떤 영향을 끼치는 지 보십시오.
 
 .play basics/type-inference.go
 
-* Constants
+* 상수
 
-Constants are declared like variables, but with the `const` keyword.
+상수는 변수처럼 선언되지만 `const` 키워드와 함께 선언됩니다.
 
-Constants can be character, string, boolean, or numeric values.
+상수는 `character` 혹은 `string`, `boolean`, 숫자 값이 될 수 있습니다.
 
-Constants cannot be declared using the `:=` syntax.
+상수는 `:=` 를 통해 선언될 수 없습니다.
 
 .play basics/constants.go
 
 * Numeric Constants
 
-Numeric constants are high-precision _values_.
+숫자형 상수
+숫자형 상수는 매우 정확한 _값_입니다.
 
-An untyped constant takes the type needed by its context.
+type이 정해지지 않은 상수는 그것의 문맥에서 필요한 type을 취합니다.
 
-Try printing `needInt(Big)` too.
+`needInt(Big)`` 을 출력해보세요.
 
-(An `int` can store at maximum a 64-bit integer, and sometimes less.)
+(`int` 는 최대 64-bit 혹은 때때로 더 작은 정수를 저장할 수 있습니다.)
 
 .play basics/numeric-constants.go
 
 * Congratulations!
+축하드립니다!
+당신은 이번 강의를 마쳤습니다!
 
-You finished this lesson!
-
-You can go back to the list of [[/list][modules]] to find what to learn next, or continue with the [[javascript:click('.next-page')][next lesson]].
+다음에 무엇을 배울 지 보러 [[/list][단원]]의 목록으로 돌아가실 수도 있고, [[javascript:click('.next-page')][다음]]으로 강의를 이어가실 수도 있습니다.
