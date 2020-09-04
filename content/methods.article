@@ -1,250 +1,239 @@
 Method와 interface
-이 강의는 object와 그것들의 행동을 정의하는 구조인 method와 interface를 다룹니다.
+이 강의는 object와 그것들의 행동을 정의하는 구조인 method, interface를 다룹니다.
 
 The Go Authors
 https://golang.org
 
 * Methods
 
-Go does not have classes.
-However, you can define methods on types.
+Go는 클래스를 가지지 않습니다.
 
-A method is a function with a special _receiver_ argument.
+하지만, 그와 같은 타입의 메소드를 정의할 수 있습니다.
 
-The receiver appears in its own argument list between the `func` keyword and
-the method name.
+그 메서드는 특별한 _receiver_ 인자가 있는 함수입니다.
 
-In this example, the `Abs` method has a receiver of type `Vertex` named `v`.
+그 receiver는 `func` 키워드와 메서드 이름 사이의 자체 인수 목록에 나타납니다.
+
+(receiver는 이하 리시버라고 칭하겠습니다.)
+
+이 예에서 `Abs` 메소드에는 `v` 라는 이름의 `Vertex` 유형의 리시버가 있습니다.
 
 .play methods/methods.go
 
-* Methods are functions
+* Methods는 함수입니다.
 
-Remember: a method is just a function with a receiver argument.
+기억할 것: 메소드는 리시버 인수가 있는 함수입니다.
 
-Here's `Abs` written as a regular function with no change in functionality.
+다음은 기능 변경 없이 일반 함수로 작성된 `Abs` 입니다.
 
 .play methods/methods-funcs.go
 
-* Methods continued
+* Methods 계속
 
-You can declare a method on non-struct types, too.
+구조체가 아닌 형식에 대해서도 메소드를 선언할 수 있습니다.
 
-In this example we see a numeric type `MyFloat` with an `Abs` method.
+이 예에서는 `Abs` 메소드가 있는 숫자 유형 'MyFloat'을 확인할 수 있습니다.
 
-You can only declare a method with a receiver whose type is defined in the same
-package as the method.
-You cannot declare a method with a receiver whose type is defined in another
-package (which includes the built-in types such as `int`).
+메소드와 동일한 패키지에 유형이 정의된 수신자가 있는 메소드만 선언할 수 있습니다.
+
+유형이 다른 패키지 (`int` 와 같은 빌트인 유형 포함)에 정의된 리시버로 메소드를 선언 할 수 없습니다.
 
 .play methods/methods-continued.go
 
-* Pointer receivers
+* 포인터 리시버
 
-You can declare methods with pointer receivers.
+포인터 리시버로 메소드를 선언 할 수 있습니다.
 
-This means the receiver type has the literal syntax `*T` for some type `T`.
-(Also, `T` cannot itself be a pointer such as `*int`.)
+이는 리시버 유형이 일부 유형 `T` 에 대한 리터럴 구문 `*T` 를 가짐을 의미합니다.
+(또한 `T` 자체는 `*int` 와 같은 포인터가 될 수 없습니다.)
 
-For example, the `Scale` method here is defined on `*Vertex`.
+예를 들어, 여기서 `Scale` 방법은 `*Vertex` 에 정의되어 있습니다.
 
-Methods with pointer receivers can modify the value to which the receiver
-points (as `Scale` does here).
-Since methods often need to modify their receiver, pointer receivers are more
-common than value receivers.
+포인터 리시버가 있는 메소드는 `Scale` 처럼 리시버가 가리키는 값을 수정할 수 있습니다.
 
-Try removing the `*` from the declaration of the `Scale` function on line 16
-and observe how the program's behavior changes.
+메소드는 종종 리시버를 수정해야하기에 포인터 리시버가 값 수신기보다 더 일반적입니다.
 
-With a value receiver, the `Scale` method operates on a copy of the original
-`Vertex` value.
-(This is the same behavior as for any other function argument.)
-The `Scale` method must have a pointer receiver to change the `Vertex` value
-declared in the `main` function.
+16 행의 `Scale` 함수 선언에서 `*` 를 제거하고 프로그램의 동작이 어떻게 변하는 지 관찰해보십시오.
+
+값 수신기를 사용하면 `Scale` 메서드가 원래 `Vertex` 값의 복사본에서 작동합니다.
+(이것은 다른 함수 인수와 동일합니다.)
+
+`Scale` 메소드에는 `main` 함수에 선언된 `Vertex` 값을 변경하기 위한 포인터 리시버가 있어야합니다.
 
 .play methods/methods-pointers.go
 
-* Pointers and functions
+* 포인터와 함수
 
-Here we see the `Abs` and `Scale` methods rewritten as functions.
+여기서 우리는 함수로 재 작성된 `Abs` 와 `Scale` 메소드를 볼 수 있습니다.
 
-Again, try removing the `*` from line 16.
-Can you see why the behavior changes?
-What else did you need to change for the example to compile?
+다시 16 행에서 `*` 를 제거해보십시오.
 
-(If you're not sure, continue to the next page.)
+동작이 바뀌는 것을 볼 수 있습니까?
+
+예제를 컴파일하기 위해서는 무엇을 변경해야합니까?
+
+(확실하지 않은 경우 다음 페이지로 이동하십시오.)
 
 .play methods/methods-pointers-explained.go
 
-* Methods and pointer indirection
+* 메소드와 포인터 indirection
 
-Comparing the previous two programs, you might notice that
-functions with a pointer argument must take a pointer:
+이전 두 프로그램을 비교하여 포인터 인수의 함수가 다음과 같은 포인터를 사용해야함을 알 수 있습니다.
 
 	var v Vertex
 	ScaleFunc(v, 5)  // Compile error!
 	ScaleFunc(&v, 5) // OK
 
-while methods with pointer receivers take either a value or a pointer as the
-receiver when they are called:
+포인터 리시버가 있는 메소드는 다음과 같이 호출될 때 값이나 포인터를 리시버로 받아들입니다.
 
 	var v Vertex
 	v.Scale(5)  // OK
 	p := &v
 	p.Scale(10) // OK
 
-For the statement `v.Scale(5)`, even though `v` is a value and not a pointer,
-the method with the pointer receiver is called automatically.
-That is, as a convenience, Go interprets the statement `v.Scale(5)` as
-`(&v).Scale(5)` since the `Scale` method has a pointer receiver.
+`v` 라는 문장의 경우, `v.Scale(5)` 는 `v` 가 포인터가 아니라 값인데도 포인터 리시버가 있는 메서드는 자동으로 호출됩니다.
+
+즉, `Scale` 메서드가 포인터 리시버를 가졌기 때문에 편의상 Go는 `v.Scale(5)` 라는 것을 `(&v).Scale(5)` 로 해석합니다.
 
 .play methods/indirection.go
 
-* Methods and pointer indirection (2)
+* 메소드와 포인터 indirection (2)
 
-The equivalent thing happens in the reverse direction.
+이와 동등한 일은 역방향에서 일어날 수 있다.
 
-Functions that take a value argument must take a value of that specific type:
+값 인수를 사용하는 함수는 다음과 같은 특정 유형의 값을 사용해야 합니다.
 
 	var v Vertex
 	fmt.Println(AbsFunc(v))  // OK
 	fmt.Println(AbsFunc(&v)) // Compile error!
 
-while methods with value receivers take either a value or a pointer as the
-receiver when they are called:
+value receiver 가 있는 메서드는 다음과 같이 호출될 때, 값이나 포인터를 리시버로 사용합니다.
 
 	var v Vertex
 	fmt.Println(v.Abs()) // OK
 	p := &v
 	fmt.Println(p.Abs()) // OK
 
-In this case, the method call `p.Abs()` is interpreted as `(*p).Abs()`.
+이 경우에, `p.Abs()` 라는 메서드는 `(*p).Abs()` 로 해석됩니다.
 
 .play methods/indirection-values.go
 
-* Choosing a value or pointer receiver
+* 값 또는 포인터 리시버 선택
 
-There are two reasons to use a pointer receiver.
+포인터 리시버를 사용하는 데에는 두 가지 이유가 있습니다.
 
-The first is so that the method can modify the value that its receiver points to.
+첫번째는, 메서드가 리시버가 가리키는 값을 수정할 수 있기 때문입니다.
 
-The second is to avoid copying the value on each method call.
-This can be more efficient if the receiver is a large struct, for example.
+두번째는 각각의 메서드 call에서의 value 복사 문제를 피하기 위해서입니다.
 
-In this example, both `Scale` and `Abs` are with receiver type `*Vertex`,
-even though the `Abs` method needn't modify its receiver.
+예를 들어 리시버가 큰 구조체라면 이것은 더 효율적일 수 있습니다.
 
-In general, all methods on a given type should have either value or pointer
-receivers, but not a mixture of both.
-(We'll see why over the next few pages.)
+이 예시에서, `Abs` 메서드는 리시버 방식을 수정할 필요가 없지만 `Scale` 과 `Abs` 는 모두 `*Vertex` 라는 리시버 타입으로 되어있습니다.
+
+일반적으로 특정 유형의 모든 방법에는 값이나 포인터 리시버가 있어야 하지만 둘 다 혼합되어서는 안됩니다.
+(몇 페이지에 걸쳐 그 이유를 알아봅시다.)
 
 .play methods/methods-with-pointer-receivers.go
 
 * Interfaces
 
-An _interface_type_ is defined as a set of method signatures.
+_interface_type_은 메소드의 시그니처 집합으로 정의됩니다.
 
-A value of interface type can hold any value that implements those methods.
+인터페이스 유형의 값은 해당 메소드를 구현하는 모든 값을 보유 할 수 있습니다.
 
-*Note:* There is an error in the example code on line 22.
-`Vertex` (the value type) doesn't implement `Abser` because
-the `Abs` method is defined only on `*Vertex` (the pointer type).
+*참고:* 예제 코드 22행에 오류가 있습니다.
+`Vertex` (값 유형)는 `Abser` 를 구현하지 않습니다.
+왜냐하면 `Abs` 메소드는 `*Vertex` (포인터 유형)에서만 정의되기 때문입니다.
 
 .play methods/interfaces.go
 
-* Interfaces are implemented implicitly
+* 인터페이스의 암시적 구현.
 
-A type implements an interface by implementing its methods.
-There is no explicit declaration of intent, no "implements" keyword.
+type implements는 메소드를 실행함으로써 인터페이스를 구현합니다.
+명시적 intent의 선언도, "implementation"의 키워드도 없습니다.
 
-Implicit interfaces decouple the definition of an interface from its
-implementation, which could then appear in any package without prearrangement.
+암시적 인터페이스는 인터페이스의 정의를 구현으로부터 분리하며,
+이는 사전 정렬 없이 어떠한 패키지에 등장할 수 있습니다.
 
 .play methods/interfaces-are-satisfied-implicitly.go
 
-* Interface values
+* 인터페이스 값
 
-Under the hood, interface values can be thought of as a tuple of a value and a
-concrete type:
+hood 아래에서, 인터페이스의 값은 값과 콘크리트 타입의 튜플이라고 생각할 수 있습니다.
 
 	(value, type)
 
-An interface value holds a value of a specific underlying concrete type.
+인터페이스 값은 특정 기초 콘크리트 유형의 가치를 가집니다.
 
-Calling a method on an interface value executes the method of the same name on
-its underlying type.
+인터페이스 값으로 메소드를 호출하면 기본 형식에 동일한 이름의 메서드가 실행됩니다.
 
 .play methods/interface-values.go
 
-* Interface values with nil underlying values
+* Nill 인터페이스 값
 
-If the concrete value inside the interface itself is nil,
-the method will be called with a nil receiver.
+인터페이스 자체 내부의 콘크리트 값이 0일 경우, 그 메소드는 nil 리시버로 호출됩니다.
 
-In some languages this would trigger a null pointer exception,
-but in Go it is common to write methods that gracefully handle being called
-with a nil receiver (as with the method `M` in this example.)
+일부 언어에서는 이것이 null 포인터 예외를 발생시키지만,
+Go 에서는 nil 리시버로 호출되는 것으로 불리는 매우 좋은 방법을 사용하는 것이 일반적입니다.
+(이 예시의 `M` 이라는 방법과 같습니다.)
 
-Note that an interface value that holds a nil concrete value is itself non-nil.
+nil 콘크리트 값을 갖는 인터페이스 값 자체가 nil이 아니라는 점에 유의해야 합니다.
 
 .play methods/interface-values-with-nil.go
 
-* Nil interface values
+* Nil 인터페이스 값
 
-A nil interface value holds neither value nor concrete type.
+Nil 인터페이스 값은 값 또는 콘크리트 유형 모두를 가지지 않습니다.
 
-Calling a method on a nil interface is a run-time error because there is no
-type inside the interface tuple to indicate which _concrete_ method to call.
+nil 인터페이스에서 메소드를 호출하는 것은 런타임 에러입니다.
+왜냐하면, 어떠한 _구체적인_ 메소드를 호출할지를 나타내는 인터페이스 튜플 내부의 타입이 없기 때문입니다.
 
 .play methods/nil-interface-values.go
 
-* The empty interface
+* 빈 인터페이스 값
 
-The interface type that specifies zero methods is known as the _empty_interface_:
+0 메서드를 지칭하는 인터페이스 유형을 _empty_interface_라고 합니다:
 
 	interface{}
 
-An empty interface may hold values of any type.
-(Every type implements at least zero methods.)
+빈 인터페이스는 모든 유형의 값을 가질 수 있습니다.
+(모든 유형은 최소 0개의 메소드를 구현합니다.)
 
-Empty interfaces are used by code that handles values of unknown type.
-For example, `fmt.Print` takes any number of arguments of type `interface{}`.
+빈 인터페이스는 알 수 없는 값을 처리하는데 이용됩니다.
+예를 들어, `fmt.Print` 는 `interface{}` 타입의 어떠한 인수라도 취할 수 있습니다.
 
 .play methods/empty-interface.go
 
-* Type assertions
+* 타입 선언
 
-A _type_assertion_ provides access to an interface value's underlying concrete value.
+_type_assertion_은 인터페이스 값의 기초적인 콘크리트 값에 대한 접근을 제공합니다.
 
 	t := i.(T)
 
-This statement asserts that the interface value `i` holds the concrete type `T`
-and assigns the underlying `T` value to the variable `t`.
+이는 인터페이스 값 `i` 가 콘크리트 타입 `T` 를 갖고 있으며,
+그 기본 값인 `T` 값을 변수 `t` 에 할당하고 있다고 선언합니다.
 
-If `i` does not hold a `T`, the statement will trigger a panic.
+만약 `i` 가 `T` 를 갖지 못하면면 그 선언은 panic 상태가 됩니다.
 
-To _test_ whether an interface value holds a specific type,
-a type assertion can return two values: the underlying value
-and a boolean value that reports whether the assertion succeeded.
+인터페이스 값이 특정 유형을 보유하는지 여부를 _test_하기 위해,
+타입 선언에서는 두 가지 값, 즉 기본 값과 선언 성공 여부를 보고하는 부울 값을 반환할 수 있습니다.
 
 	t, ok := i.(T)
 
-If `i` holds a `T`, then `t` will be the underlying value and `ok` will be true.
+만약 `i` 가 `T` 를 갖고 있다면, `t` 는 underlying value가 되며, `ok` 가 true를 반환합니다.
 
-If not, `ok` will be false and `t` will be the zero value of type `T`,
-and no panic occurs.
+만약 그렇지 않다면, `ok` 는 거짓이 되고 `t` 는 `T` 라는 유형의 zero 값이 되며 어떠한 패닉도 발생하지 않습니다.
 
-Note the similarity between this syntax and that of reading from a map.
+이 구문과 map에서 읽는 구문 간의 유사성에 유의하십시오.
 
 .play methods/type-assertions.go
 
-* Type switches
+* 타입 스위치
 
-A _type_switch_ is a construct that permits several type assertions in series.
+_type_switch는 여러 타입의 선언을 직렬로 허용하는 구조입니다.
 
-A type switch is like a regular switch statement, but the cases in a type
-switch specify types (not values), and those values are compared against
-the type of the value held by the given interface value.
+타입 스위치는 일반 스위치문과 같지만 타입 스위치문의 경우에는 값이 아닌 타입을 명시하며,
+그 값들은 지정된 인터페이스 값에 의해 유지되는 값의 타입과 비교됩니다.
 
 	switch v := i.(type) {
 	case T:
@@ -255,55 +244,49 @@ the type of the value held by the given interface value.
 		// no match; here v has the same type as i
 	}
 
-The declaration in a type switch has the same syntax as a type assertion `i.(T)`,
-but the specific type `T` is replaced with the keyword `type`.
+타입 스위치의 선언은 타입 선언 `i.(T)` 와 같은 구문을 가집니다.
+그러나 특정 타입인 `T` 는 `type` 이라는 키워드로 대체됩니다.
 
-This switch statement tests whether the interface value `i`
-holds a value of type `T` or `S`.
-In each of the `T` and `S` cases, the variable `v` will be of type
-`T` or `S` respectively and hold the value held by `i`.
-In the default case (where there is no match), the variable `v` is
-of the same interface type and value as `i`.
+이 스위치 문장은 인터페이스 값 `i` 가 `T` 형인지 `S` 형인지 시험합니다.
+`T` 와 `S` 의 각각의 경우 변수 `v` 는 각각 `T` 형과 `S` 형으로, `i` 형이 보유한 값을 보유하게 됩니다.
+디폴트 케이스(일치하지 않는 경우)에서 변수 `v` 는 인터페이스 종류와 값이 `i` 와 같습니다.
 
 .play methods/type-switches.go
 
 * Stringers
 
-One of the most ubiquitous interfaces is [[//golang.org/pkg/fmt/#Stringer][`Stringer`]] defined by the [[//golang.org/pkg/fmt/][`fmt`]] package.
+가장 널리 사용되는 인터페이스 중 하나는  [[//golang.org/pkg/fmt/][ `fmt` ]]패키지에 의해 정의된 [[//golang.org/pkg/fmt/#Stringer][ `Stringer` ]] 입니다.
 
 	type Stringer interface {
 		String() string
 	}
 
-A `Stringer` is a type that can describe itself as a string. The `fmt` package
-(and many others) look for this interface to print values.
+`Stringer` 는 자신을 문자열로 설명할 수 있는 타입입니다.
+`fmt` 패키지 및 기타 여러 패키지는 값을 출력하기 위해 이 인터페이스를 사용합니다.
 
 .play methods/stringer.go
 
-* Exercise: Stringers
+* 실습: Stringers
 
-Make the `IPAddr` type implement `fmt.Stringer` to print the address as
-a dotted quad.
+`IPAddr` 타입이 `fmt.Stringer` 을 구현하여 dotted quad로 출력하도록 합니다.
 
-For instance, `IPAddr{1,`2,`3,`4}` should print as `"1.2.3.4"`.
+예를 들어, `IPAddr{1,`2,`3,`4}` 는 `"1.2.3.4"` 와 같이 출력되어야합니다.
 
 .play methods/exercise-stringer.go
 
 * Errors
 
-Go programs express error state with `error` values.
+Go 프로그램은 'error' 값으로 오류 상태를 표현합니다.
 
-The `error` type is a built-in interface similar to `fmt.Stringer`:
+`error` 타입은 `fmt.Stringer` 와 유사한 내장 인터페이스 입니다:
 
 	type error interface {
 		Error() string
 	}
 
-(As with `fmt.Stringer`, the `fmt` package looks for the `error` interface when
-printing values.)
+(`fmt.Stringer` 와 마찬가지로 `fmt` 패키지는 값을 출력할 때 `error` 인터페이스를 찾습니다.)
 
-Functions often return an `error` value, and calling code should handle errors
-by testing whether the error equals `nil`.
+함수는 종종 `error` 값을 반환하며, 호출 코드는 오류가 `nil` 과 같은지 테스트하여 오류를 처리해야합니다.
 
 	i, err := strconv.Atoi("42")
 	if err != nil {
@@ -312,76 +295,73 @@ by testing whether the error equals `nil`.
 	}
 	fmt.Println("Converted integer:", i)
 
-A nil `error` denotes success; a non-nil `error` denotes failure.
+nil `error` 는 성공을 나타냅니다; nil이 아닌 `error` 는 실패를 나타냅니다.
 
 .play methods/errors.go
 
-* Exercise: Errors
+* 실습: Errors
 
-Copy your `Sqrt` function from the [[/flowcontrol/8][earlier exercise]] and modify it to return an `error` value.
+[[/flowcontrol/8][earlier exercise]] 에서 `Sqrt` 함수를 복사하고, `error` 값을 반환하도록 수정합니다.
 
-`Sqrt` should return a non-nil error value when given a negative number, as it doesn't support complex numbers.
-
-Create a new type
+`Sqrt` 는 복소수를 지원하지 않으므로 음수가 주어지면 nil이 아닌 오류를 반환해야합니다.
 
 	type ErrNegativeSqrt float64
 
-and make it an `error` by giving it a
+이라는 새 유형을 만들어, 그것을 `error` 로 만듭니다.
 
 	func (e ErrNegativeSqrt) Error() string
 
-method such that `ErrNegativeSqrt(-2).Error()` returns `"cannot`Sqrt`negative`number:`-2"`.
+`ErrNegativeSqrt(-2).Error()` 는 `"cannot`Sqrt`negative`number:`-2"` 를 반환하는 메소드입니다.
 
-*Note:* A call to `fmt.Sprint(e)` inside the `Error` method will send the program into an infinite loop. You can avoid this by converting `e` first: `fmt.Sprint(float64(e))`. Why?
+*참고:* `Error` 메소드 내에서 `fmt.Sprint(e)` 를 호출하면 프로그램이 무한 루프를 돌게 됩니다.
+먼저 `e` 를 `fmt.Sprint(float64(e))` 로 변환하여 이를 방지할 수 있습니다. 왜 그럴까요?
 
-Change your `Sqrt` function to return an `ErrNegativeSqrt` value when given a negative number.
+음수가 주어지면 `ErrNegativeSqrt` 값을 반환하도록 `Sqrt` 함수를 변경합니다.
 
 .play methods/exercise-errors.go
 
 * Readers
 
-The `io` package specifies the `io.Reader` interface,
-which represents the read end of a stream of data.
+`io` 패키지는 데이터 스트림의 읽기를 나타내는 `io.Reader` 인터페이스를 지정합니다.
 
-The Go standard library contains [[https://golang.org/search?q=Read#Global][many implementations]] of this interface, including files, network connections, compressors, ciphers, and others.
+Go 표준 라이브러리에는 파일, 네트워크 연결, 압축기, 암호 등을 포함하여 인터페이스의 [[https://golang.org/search?q=Read#Global][많은 구현]] 이 포함되어 있습니다.
 
-The `io.Reader` interface has a `Read` method:
+`io.Reader` 인터페이스에는 `Read` 메소드가 있습니다:
 
 	func (T) Read(b []byte) (n int, err error)
 
-`Read` populates the given byte slice with data and returns the number of bytes
-populated and an error value. It returns an `io.EOF` error when the stream
-ends.
+`Read` 는 주어진 바이트 조각을 데이터로 체우고 채워진 바이트 수와 오류 값을 반환합니다.
+스트림이 종료되면 `io.EOF` 오류를 반환합니다.
 
-The example code creates a
-[[//golang.org/pkg/strings/#Reader][`strings.Reader`]]
-and consumes its output 8 bytes at a time.
+예제 코드는 [[//golang.org/pkg/strings/#Reader][`strings.Reader`]] 에서 생성할 수 있으며
+이는 한번에 8바이트 씩 사용합니다.
 
 .play methods/reader.go
 
-* Exercise: Readers
+* 실습: Readers
 
-Implement a `Reader` type that emits an infinite stream of the ASCII character
+ASCII 문자의 무한 스트림을 방출하는 `Reader` 유형 구현
 `'A'`.
 
 .play methods/exercise-reader.go
 
-* Exercise: rot13Reader
+* 실습: rot13Reader
 
-A common pattern is an [[https://golang.org/pkg/io/#Reader][io.Reader]] that wraps another `io.Reader`, modifying the stream in some way.
+일반적인 패턴은 다른 `io.Reader` 을 래핑하여 어떤 방식으로든 스트림을 수정하는 [[https://golang.org/pkg/io/#Reader][io.Reader]]  입니다.
 
-For example, the [[https://golang.org/pkg/compress/gzip/#NewReader][gzip.NewReader]] function takes an `io.Reader` (a stream of compressed data) and returns a `*gzip.Reader` that also implements `io.Reader` (a stream of the decompressed data).
+예를 들어, [[https://golang.org/pkg/compress/gzip/#NewReader][gzip.NewReader]] 함수는 `io.Reader` (압축된 데이터 스트림) 을 가져와 `*gzip.Reader` 을 반환합니다.
+또한 `io.Reader` (압축 해제된 데이터 스트림)도 구현하는 Reader 입니다.
 
-Implement a `rot13Reader` that implements `io.Reader` and reads from an `io.Reader`, modifying the stream by applying the [[https://en.wikipedia.org/wiki/ROT13][rot13]] substitution cipher to all alphabetical characters.
+모든 알파벳 문자에 `io.Reader` 를 구현하고, `io.Reader` 에서 읽는 `rot13Reader` 를 구현하고 [[https://en.wikipedia.org/wiki/ROT13][rot13]] 에 대체 암호를 적용하여 스트림을 수정합니다.
 
-The `rot13Reader` type is provided for you.
-Make it an `io.Reader` by implementing its `Read` method.
+`rot13Reader` 타입은 제공됩니다.
+`io.Reader` 메소드를 `Read` 메소드를 활용하여 만듭니다.
 
 .play methods/exercise-rot-reader.go
 
 * Images
 
-[[https://golang.org/pkg/image/#Image][Package image]] defines the `Image` interface:
+[[https://golang.org/pkg/image/#Image][Package image]]  는 `Image` 인터페이스를 정의합니다:
 
 	package image
 
@@ -391,32 +371,34 @@ Make it an `io.Reader` by implementing its `Read` method.
 		At(x, y int) color.Color
 	}
 
-*Note*: the `Rectangle` return value of the `Bounds` method is actually an
-[[https://golang.org/pkg/image/#Rectangle][`image.Rectangle`]], as the
-declaration is inside package `image`.
 
-(See [[https://golang.org/pkg/image/#Image][the documentation]] for all the details.)
+*참고*: `Bounds` 메소드의 `Rectangle` 반환 값은 선언이 내부에 있으므로
+실제로는 `image` 패키지에 속한 선언인 [[https://golang.org/pkg/image/#Rectangle][`image.Rectangle`]] 입니다.
 
-The `color.Color` and `color.Model` types are also interfaces, but we'll ignore that by using the predefined implementations `color.RGBA` and `color.RGBAModel`. These interfaces and types are specified by the [[https://golang.org/pkg/image/color/][image/color package]]
+(자세한 내용은 [[https://golang.org/pkg/image/#Image][the documentation]] 을 참고하세요. )
+
+`color.Color` 및 `color.Model` 타입도 인터페이스이지만, 사전 정의된 구현 `color.RGBA`및 `color.RGBAModel` 을 사용하여 이를 무시합니다.
+이러한 인터페이스 및 타입은 [[https://golang.org/pkg/image/color/][image/color package]] 에 자세히 서술되어있습니다.
 
 .play methods/images.go
 
-* Exercise: Images
+* 실습: Images
 
-Remember the [[/moretypes/18][picture generator]] you wrote earlier? Let's write another one, but this time it will return an implementation of `image.Image` instead of a slice of data.
+이미 작성했던 [[/moretypes/18][picture generator]] 을 기억하시나요?
+이번 시간에는 데이터 슬라이스 대신 `image.Image` 구현을 반환하는 것을 작성해봅시다.
 
-Define your own `Image` type, implement [[https://golang.org/pkg/image/#Image][the necessary methods]], and call `pic.ShowImage`.
+자신만의 `Image` 타입을 정의하고, [[https://golang.org/pkg/image/#Image][필요한 메소드]] 를 구현하고 `pic.ShowImage` 를 호출합니다.
 
-`Bounds` should return a `image.Rectangle`, like `image.Rect(0,`0,`w,`h)`.
+`Bounds` 는 `image.Rect(0,`0,`w,`h)` 와 같은 `image.Rectangle` 을 리턴합니다.
 
-`ColorModel` should return `color.RGBAModel`.
+`ColorModel` 은 `color.RGBAModel` 을 리턴할 것입니다.
 
-`At` should return a color; the value `v` in the last picture generator corresponds to `color.RGBA{v,`v,`255,`255}` in this one.
+`At` 는 색상을 반환해야 합니다. 마지막 이미지 생성기의 값 `v` 는 사진의 `color.RGBA{v,`v,`255,`255}` 에 해당합니다.
 
 .play methods/exercise-images.go
 
-* Congratulations!
+* 축하합니다!
 
-You finished this lesson!
+이번 레슨이 모두 끝났습니다!\
 
-You can go back to the list of [[/list][modules]] to find what to learn next, or continue with the [[javascript:click('.next-page')][next lesson]].
+[[/list][modules]] 목록으로 돌아가서 다음에 배울 내용을 찾거나, [[javascript:click('.next-page')][다음 강의]] 를 계속 진행할 수 있습니다.
