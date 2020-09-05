@@ -19,12 +19,12 @@ value('tableOfContents', [{
     'lessons': ['basics', 'flowcontrol', 'moretypes']
 }, {
     'id': 'methods',
-    'title': '메소드와 인터페이스',
+    'title': 'Method와 Interface',
     'description': '<p>타입에 메소드를 정의하는 방법과 인터페이스를 선언하는 방법 그리고 모든 것을 조합하는 방법을 배우십시오</p>',
     'lessons': ['methods']
 }, {
     'id': 'concurrency',
-    'title': 'Concurrency',
+    'title': 'Concurrency(동시성)',
     'description': '<p>Go는 언어의 핵심 요소로 concurrency(동시성) 특징을 제공합니다.</p><p>이 모듈은 goroutine과 channel 그리고 다른 concurrency 패턴을 도입하기 위해 그것들이 어떻게 사용되는지 살펴봅니다.</p>',
     'lessons': ['concurrency']
 }]).

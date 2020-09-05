@@ -93,13 +93,11 @@ Go의 `if` 문은 `for` 반복문과 비슷합니다. 그 표현은 `(`)` 괄호
 z에 대한 초기 추측으로 x나 x/2 같은 다른 값들을 시도해보십시오.
 당신의 함수의 결과가 표준 라이브러리인 [[https://golang.org/pkg/math/#Sqrt][math.Sqrt]]의 결과에 얼마나 가까운가요?
 
-(*주의:* 모르겠음)
 
-(*Note:* If you are interested in the details of the algorithm, the z² − x above
-is how far away z² is from where it needs to be (x), and the division by 2z is the derivative
-of z², to scale how much we adjust z by how quickly z² is changing.
-This general approach is called [[https://en.wikipedia.org/wiki/Newton%27s_method][Newton's method]].
-It works well for many functions but especially well for square root.)
+(참고 : 알고리즘의 세부 사항에 관심이 있으신 분들을 위해:
+
+위의 z² − x는 z²가 되어야할 값 (x)과 얼마나 차이나는 지를 나타내고, 2z로 나누는 것은 z²가 얼마나 빨리 변하는 지에 따라 z를 조정하기 위한 z²의 미분입니다.
+이 일반적인 접근 방식을 Newton's method라고합니다. 많은 함수에서도 잘 작동하지만 특히 제곱근에서는 잘 작동합니다.)
 
 .play flowcontrol/exercise-loops-and-functions.go
 
