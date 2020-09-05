@@ -8,118 +8,116 @@ https://golang.org
 
 모든 Go 프로그램은 패키지로 구성되어있습니다.
 
-Programs start running in package `main`.
+프로그램은 `main` 패키지에서 실행을 시작합니다.
 
-This program is using the packages with import paths `"fmt"` and `"math/rand"`.
+이 프로그램은 import 경로 `"fmt"` 와 `"math/rand"` 로 패키지를 사용합니다.
 
-By convention, the package name is the same as the last element of the import path. For instance, the `"math/rand"` package comprises files that begin with the statement `package`rand`.
+관습적으로, 패키지의 이름은 import 경로의 마지막 요소와 같습니다. 예를 들어 `"math/rand"` 패키지는 `package`rand` 문으로 시작하는 파일들로 구성되어있습니다.
 
-#appengine: *Note:* The environment in which these programs are executed is
-#appengine: deterministic, so each time you run the example program
-#appengine: `rand.Intn` will return the same number.
+#appengine: *주의:* 이 프로그램들이 실행되는 환경은 결정론적입니다. 따라서 당신이 이 예제 프로그램 실행할 때마다 `rand.Intn` 는 같은 숫자를 반환할 것입니다.
 #appengine:
-#appengine: (To see a different number, seed the number generator; see [[https://golang.org/pkg/math/rand/#Seed][`rand.Seed`]].
-#appengine: Time is constant in the playground, so you will need to use something else as the seed.)
+#appengine: (다른 숫자를 보기 위해서는 number generator에 seed를 설정하십시오.
+#appengine: playground 내에서는 Time은 상수이므로 당신은 seed로서 시간이 아닌 무언가를 사용해야 할 것입니다.
 
 .play basics/packages.go
 
-* Imports
+* Import
 
-This code groups the imports into a parenthesized, "factored" import statement.
+오른쪽의 코드는 괄호로 `import` 를 그룹 짓습니다. 이를 "factored" import 문이라고합니다.
 
-You can also write multiple import statements, like:
+당신은 여러 import문들을 다음과 같이 적을 수도 있습니다.
 
 	import "fmt"
 	import "math"
 
-But it is good style to use the factored import statement.
+하지만 위의 방식보다는 오른쪽처럼 "factored" import문을 사용하는 것이 좋은 스타일입니다.
 
 .play basics/imports.go
 
-* Exported names
+* Export되는 이름
 
-In Go, a name is exported if it begins with a capital letter.
-For example, `Pizza` is an exported name, as is `Pi`, which is exported from
-the `math` package.
+Go에서는 대문자로 시작하는 이름이 export 됩니다.
+예를 들어 `Pi` 가 `math` 패키지에서 export 되었듯이 `Pizza` 는 export되는 이름입니다.
 
-`pizza` and `pi` do not start with a capital letter, so they are not exported.
+`pizza` 와 `pi` 대문자로 시작하지 않으르모 export되지 않습니다.
 
-When importing a package, you can refer only to its exported names.
-Any "unexported" names are not accessible from outside the package.
+pacakge를 import 할 때, 당신은 그 패키지의 export된 이름들만 참조할 수 있습니다.
+export되지 않은 이름들에는 패키지의 밖에서 접근할 수 없습니다.
 
-Run the code. Notice the error message.
+코드를 실행해보십시오. 에러메시지를 보십시오.
 
-To fix the error, rename `math.pi` to `math.Pi` and try it again.
+에러를 고치기 위해서는 `math.pi` 를 `math.Pi` 로 변경하시고, 다시 시도해보십시오.
 
 .play basics/exported-names.go
 
-* Functions
+* 함수
 
-A function can take zero or more arguments.
+함수는 0개 혹은 그보다 많이 인자를 받을 수 있습니다.
 
-In this example, `add` takes two parameters of type `int`.
+이번 예시에서 `add` 는 2개의 `int` 형 매개변수를 이용합니다.
 
-Notice that the type comes _after_ the variable name.
+변수 이름 _뒤에_ type 이 온다는 것을 명심하세요.
 
-(For more about why types look the way they do, see the [[https://blog.golang.org/gos-declaration-syntax][article on Go's declaration syntax]].)
+(type이 왜 그런 방식으로 보여지는 지에 대한 자세한 내용은 [[https://blog.golang.org/gos-declaration-syntax][Go의 선언 syntax에 대한 글]]에서 확인해보십시오.)
 
 .play basics/functions.go
 
-* Functions continued
+* 이어서 Function
 
-When two or more consecutive named function parameters share a type, you can omit the type from all but the last.
+두 개 이상의 연속된 이름이 주어진 함수 매개변수가 같은 type일 때 당신은 마지막 매개변수를 제외한 매개변수들의 type을 생략할 수 있습니다.
 
-In this example, we shortened
+이번 예제에서는 우리는 다음을
 
 	x int, y int
 
-to
+이렇게 줄였습니다.
 
 	x, y int
 
 .play basics/functions-continued.go
 
-* Multiple results
+* 복수개의 결과
 
-A function can return any number of results.
+한 함수는 몇 개의 결과든 반환할 수 있습니다.
 
-The `swap` function returns two strings.
+`swap` 함수는 두 개의 string을 반환합니다.
 
 .play basics/multiple-results.go
 
-* Named return values
+* 이름이 주어진(기명의) 반환 값
 
-Go's return values may be named. If so, they are treated as variables defined at the top of the function.
+Go의 반환 값은 이름이 정해질 수도 있습니다. 그 경우, 함수의 맨 위에서 정의된 변수처럼 다뤄집니다.
 
-These names should be used to document the meaning of the return values.
+이러한 이름들은 반환 값의 의미를 설명하는 데에 사용되어야합니다.
 
-A `return` statement without arguments returns the named return values. This is known as a "naked" return.
+인자가 없는 `return` 문은 이름이 주어진 반환 값을을 반환합니다. 이것을 "naked" return 이라고 합니다.
 
-Naked return statements should be used only in short functions, as with the example shown here. They can harm readability in longer functions.
+여기 이 예제에서처럼 naked return문은 짧은 함수에서만 사용되어야합니다.
+긴 함수에서는 그것이 가독성을 떨어뜨릴 수 있습니다.
 
 .play basics/named-results.go
 
-* Variables
+* 변수
 
-The `var` statement declares a list of variables; as in function argument lists, the type is last.
+`var` 문은 변수에 대한 목록을 선언합니다. 함수 인자의 목록이 그랬듯, 마지막은 type입니다.
 
-A `var` statement can be at package or function level. We see both in this example.
+`var` 문은 package나 함수 단에 존재할 수 있습니다. 이 예제를 통해 두 경우 모두를 살펴봅시다.
 
 .play basics/variables.go
 
-* Variables with initializers
+* 변수 초기화
 
-A var declaration can include initializers, one per variable.
+변수 선언은 한 변수 당 하나의 초깃값을 포함할 수 있습니다.
 
-If an initializer is present, the type can be omitted; the variable will take the type of the initializer.
+만약 초깃값이 존재한다면, type은 생략될 수 있습니다. 이 경우, 변수는 초깃값의 type을 취합니다.
 
 .play basics/variables-with-initializers.go
 
-* Short variable declarations
+* 짧은 변수 선언
 
-Inside a function, the `:=` short assignment statement can be used in place of a `var` declaration with implicit type.
+함수 내에서는 `:=` 라는 짧은 변수 선언은 암시적 type으로 `var` 선언처럼 사용될 수 있습니다.
 
-Outside a function, every statement begins with a keyword (`var`, `func`, and so on) and so the `:=` construct is not available.
+함수 밖에서는 모든 선언이 키워드(`var`, `func`, 기타 등등)로 시작하므로 `:=` 구문은 사용할 수 없습니다.
 
 .play basics/short-variable-declarations.go
 
@@ -152,9 +150,9 @@ Outside a function, every statement begins with a keyword (`var`, `func`, and so
 
 * Zero values
 
-명시적인 초깃값 없이 선언된 변수는 그것의 _zero_value_가 주어집니다.
+명시적인 초깃값 없이 선언된 변수는 그것의 _zero_value_ 가 주어집니다.
 
-`zero value` 는 다음과 같습니다.
+`zero`value` 는 다음과 같습니다.
 
 - 숫자 type에는 0
 - boolean type에는 false
@@ -183,7 +181,7 @@ C와 달리 Go는 다른 type의 요소들 간의 할당에는 명시적인 변�
 
 * Inference type
 
-`:=` 혹은 `var =` 표현을 이용해 명시적인 type을 정의하지 않고 변수를 선언할 때, 그 변수 type은 오른 편에 있는 값으로부터 유추됩니다.
+`:=` 혹은 `var`=` 표현을 이용해 명시적인 type을 정의하지 않고 변수를 선언할 때, 그 변수 type은 오른 편에 있는 값으로부터 유추됩니다.
 
 변수 선언의 오른 쪽에 무언가 적힐 때, 새로운 변수는 그것과 같은 type이 됩니다.
 
@@ -213,11 +211,11 @@ C와 달리 Go는 다른 type의 요소들 간의 할당에는 명시적인 변�
 * Numeric Constants
 
 숫자형 상수
-숫자형 상수는 매우 정확한 _값_입니다.
+숫자형 상수는 매우 정확한 _값_ 입니다.
 
 type이 정해지지 않은 상수는 그것의 문맥에서 필요한 type을 취합니다.
 
-`needInt(Big)`` 을 출력해보세요.
+`needInt(Big)` 을 출력해보세요.
 
 (`int` 는 최대 64-bit 혹은 때때로 더 작은 정수를 저장할 수 있습니다.)
 
