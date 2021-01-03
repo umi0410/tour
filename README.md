@@ -20,10 +20,19 @@ $ gcloud app browse
 
 ## Contribute하기
 
-### 로컬에서 실행하는 방법
+golang-ko의 tour는 누구든 자유롭게 기여하실 수 있고, 이를 매우 환영합니다!
+
+간단한 오타 수정이나 추가 번역의 경우 바로 PR을 남겨주셔도 되고, 간단히 Issue를 남겨주시면
+누군가 빠른 시일 내에 참고하여 처리할 것입니다.
+
+이슈를 남기고, 본인이 직접 해결해보고자하시는 분은 이슈에 해당 내용을 언급해주시면 감사하겠습니다.
+
+많은 Contribute를 기대합니다! 감사합니다!
+
+### Contribute 전에 로컬에서 확인해보는 방법
 
 ```bash
-# project root에서 실행
+# git clone 후 project root에서 실행
 $ go run .
 2020/09/02 16:59:17 Serving content from <YOUR_LOCATION>/tour
 2020/09/02 16:59:17 A browser window should open. If not, please visit http://127.0.0.1:3999
